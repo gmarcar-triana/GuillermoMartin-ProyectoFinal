@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Gourmet</title>
+</head>
+<body>
+	<h1>Productos Gourmet</h1>	
+	<h2>Lista de Prodcutos</h2>
+	
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Nombre</th>
+				<th>Precio</th>
+				<th>Descripción</th>
+				<th>Stock</th>
+			</tr>
+		</thead>
+		<tbody th:remove="all-but-first">
+			<tr th:each="producto : ${listaProductos}">
+				<td th:text="${producto.id}"></td>
+				<td th:text="${producto.nombre}"></td>
+				<td th:text="${#numbers.formatDecimal(producto.precio,3,2)}"></td>
+				<td th:text="${producto.descripcion}"></td>
+				<td th:text="${producto.stock}"></th>
+
+			</tr>
+		</tbody>		
+	</table>
+		
+</body>
+</html>

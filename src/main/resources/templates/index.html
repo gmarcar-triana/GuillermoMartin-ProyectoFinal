@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Gourmet</title>
+</head>
+<body>
+	
+	<div th:remplace="~{fragments/general :: cabecera}"></div>
+	
+	<h2>Lista de Prodcutos</h2>
+	
+	<table border="1">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Nombre</th>
+				<th>Precio</th>
+				<th>Descripción</th>
+				<th>Stock</th>
+				<th>Categoría</th>
+				<th>Caducidad</th>
+			</tr>
+		</thead>
+		<tbody th:remove="all-but-first">
+			<tr th:each="producto : ${listaProductos}">
+			    <td th:text="${producto.id}"></td>
+			    <td th:text="${producto.nombre}"></td>
+			    <td th:text="${#numbers.formatDecimal(producto.precio, 1, 2) + ' €'}"></td>
+			    <td th:text="${producto.descripcion}"></td>
+			    <td th:text="${producto.stock}"></td>
+			    <td th:text="${producto.categoria}"></td>
+			    <td th:text="${#temporals.format(producto.fechaCaducidad, 'dd/MM/yyyy')}"></td>
+			</tr>
+		</tbody>		
+	</table>
+	
+	<div th:remplace="~{fragments/general :: pie}"></div>
+		
+</body>
+</html>
