@@ -1,4 +1,4 @@
-package entities;
+package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

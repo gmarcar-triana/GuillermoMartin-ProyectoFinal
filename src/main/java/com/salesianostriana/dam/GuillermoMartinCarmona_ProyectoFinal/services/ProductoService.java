@@ -1,4 +1,4 @@
-package services;
+package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import entities.Producto;
+import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.entities.Producto;
 
 @Service
 public class ProductoService {
