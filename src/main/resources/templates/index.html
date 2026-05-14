@@ -9,6 +9,8 @@
 	
 	<div th:remplace="~{fragments/general :: cabecera}"></div>
 	
+	<a href="#" th:href="@{/nuevoProducto}">Insertar un nuevo producto</a>
+	
 	<h2>Lista de Prodcutos</h2>
 	
 	<table border="1">
@@ -25,7 +27,7 @@
 		</thead>
 		<tbody th:remove="all-but-first">
 			<tr th:each="producto : ${listaProductos}">
-			    <td th:text="${producto.id}"></td>
+			    <td th:text="${producto.codigo_producto}"></td>
 			    <td th:text="${producto.nombre}"></td>
 			    <td th:text="${#numbers.formatDecimal(producto.precio, 1, 2) + ' €'}"></td>
 			    <td th:text="${producto.descripcion}"></td>
