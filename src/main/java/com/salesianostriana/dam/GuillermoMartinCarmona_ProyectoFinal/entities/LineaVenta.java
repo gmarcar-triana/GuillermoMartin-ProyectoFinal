@@ -1,7 +1,6 @@
 package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.entities;
 
 import jakarta.persistence.Entity;
-<<<<<<< HEAD
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -53,26 +52,4 @@ public class LineaVenta {
 		producto.getLineasVenta().remove(this);
 		this.producto = null;
 	}
-=======
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data @AllArgsConstructor @NoArgsConstructor
-@Entity
-public class LineaVenta {
-
-	@Id
-	private Long id;
-	private int cantidad;
-	
-	@ManyToOne
-	private Pedido pedido;
-	
-	@ManyToOne
-	private Producto producto;
-	
->>>>>>> 576fe9eece71b1526a4a6c708248c188802c2357
 }

@@ -1,7 +1,6 @@
 package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.entities;
 
 import java.time.LocalDateTime;
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,22 +22,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-=======
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data @AllArgsConstructor @NoArgsConstructor
->>>>>>> 576fe9eece71b1526a4a6c708248c188802c2357
 @Entity
 public class Pedido {
 
 	@Id
-<<<<<<< HEAD
 	private Long codigo_pedido;
 	private LocalDateTime fecha;
 	private double total;
@@ -63,14 +50,5 @@ public class Pedido {
 		cliente.getPedidos().remove(this);
 		this.cliente = null;
 	}
-=======
-	private String codigo_pedido;
-	private LocalDateTime fecha;
-	private double total;
-	
-	@ManyToOne
-	private Cliente cliente;
-	
->>>>>>> 576fe9eece71b1526a4a6c708248c188802c2357
 }
 
