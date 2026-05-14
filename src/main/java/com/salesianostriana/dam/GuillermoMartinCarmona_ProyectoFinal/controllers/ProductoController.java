@@ -18,12 +18,21 @@ import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.Pr
 public class ProductoController {
 
 	@Autowired
+<<<<<<< HEAD
 	private ProductoService productService;
+=======
+	private ProductoService service;
+>>>>>>> 576fe9eece71b1526a4a6c708248c188802c2357
 	
 	@GetMapping ({"/", "/list"})
 	public String listadoProductos(Model model) {
 		
+<<<<<<< HEAD
 		model.addAttribute("listaProductos", productService.getList());
+=======
+		model.addAttribute("listaProductos", service.getList());
+		
+>>>>>>> 576fe9eece71b1526a4a6c708248c188802c2357
 		return "index";
 		
 	}
@@ -31,15 +40,24 @@ public class ProductoController {
 	@GetMapping ({"/listSort"})
 	public String listadoProductosOrdenadoMax(Model model) {
 		
+<<<<<<< HEAD
 		List<Producto> listaOrdenada = productService.getList();
+=======
+		List<Producto> listaOrdenada = service.getList();
+>>>>>>> 576fe9eece71b1526a4a6c708248c188802c2357
 		//metodo de la api para ordenar los precios de mayor a menor usando un comparador.
 		listaOrdenada.sort(Comparator.comparing(Producto::getPrecio).reversed());
 		
 		model.addAttribute("listaProductos", listaOrdenada);
+<<<<<<< HEAD
+=======
+		
+>>>>>>> 576fe9eece71b1526a4a6c708248c188802c2357
 		return "index";
 		
 	}
 	
+<<<<<<< HEAD
 	@GetMapping("/nuevoProducto")
 	public String mosrtrarFormularioProducto(Model model) {
 		
@@ -55,6 +73,25 @@ public class ProductoController {
 		productService.agregarProducto(producto);
 		
 		return "redirect:/";
+=======
+	@GetMapping({"/producto"})
+	public String showFormProducto(Model model) {
+		
+		Producto producto = new Producto();
+		model.addAttribute("productoForm", producto);
+		
+		return "formProducto";
+		
+	}
+	
+	
+	@PostMapping ({"/addProducto"})
+	public String formularioAgregarProducto(@ModelAttribute("productoForm")Producto producto, Model model) {
+		
+		model.addAttribute("producto", producto);
+		
+		return "agregar";
+>>>>>>> 576fe9eece71b1526a4a6c708248c188802c2357
 		
 	}
 	

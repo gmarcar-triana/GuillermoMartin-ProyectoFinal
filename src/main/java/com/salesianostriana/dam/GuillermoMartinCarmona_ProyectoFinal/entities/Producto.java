@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.entities;
 
 import java.time.LocalDate;
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +27,28 @@ public class Producto {
 	@Id @GeneratedValue
 	private String codigo_producto;
 	
+=======
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data @AllArgsConstructor @NoArgsConstructor
+@Entity
+public class Producto {
+
+	@Id
+	private String codigo_producto;
+>>>>>>> 576fe9eece71b1526a4a6c708248c188802c2357
 	private String nombre;
 	private double precio;
 	private String descripcion;
 	private boolean stock;
 	private String categoria;
 	private LocalDate fechaCaducidad;
+<<<<<<< HEAD
 	
 	private String imagenUrl;
 	
@@ -42,3 +59,8 @@ public class Producto {
 	private List<LineaVenta> lineasVenta = new ArrayList<>();
 		
 }
+=======
+		
+}
+
+>>>>>>> 576fe9eece71b1526a4a6c708248c188802c2357
