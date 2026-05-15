@@ -1,4 +1,4 @@
-package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.entities;
+package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -23,8 +24,8 @@ import lombok.ToString;
 @Entity
 public class Producto {
 
-	@Id @GeneratedValue
-	private Long codigo_producto;
+	@Id @GeneratedValue(strategy=GenerationType.AUTO)
+	private Long codigoProducto;
 	
 	private String nombre;
 	private double precio;
@@ -39,6 +40,6 @@ public class Producto {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	@Builder.Default
-	private List<LineaVenta> lineasVenta = new ArrayList<>();
+	private List<LineaPedido> lineasVenta = new ArrayList<>();
 		
 }

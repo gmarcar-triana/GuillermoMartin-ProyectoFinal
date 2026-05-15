@@ -1,30 +1,35 @@
-package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.controllers.producto;
+package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.controladores;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.entities.Producto;
-import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.producto.ProductoService;
+import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Producto;
+import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.ProductoService;
 
 @Controller
+@RequestMapping("/admin")
 public class ProductoController {
 
 	@Autowired
 	private ProductoService productService;
 	
-	@GetMapping ({"/", "/list"})
+	@GetMapping ({"/"})
 	public String listadoProductos(Model model) {
 		
+		System.out.println(productService.toString());
 		model.addAttribute("listaProductos", productService.getList());
 		
-		return "index";
+		return "productolist";
 		
 	}
 	
@@ -80,6 +85,41 @@ public class ProductoController {
 		return "agregar";
 		
 	}
+	
+	@GetMapping ("/editar/{id}")
+	public String editarProductoFormulario(@PathVariable("id") Long id, Model model) {
+
+		Optional<Producto> aEditar = productService.findById(id);
+		
+		if (aEditar.isPresent()) {
+			model.addAttribute("alumno", aEditar.get());
+			return "productoform";
+		} else {
+			return "redirect:/";
+		}
+		
+	}
+	
+	@PostMapping("/editar/submit")
+	public String procesarFormularioEdicionProducto(@ModelAttribute("producto") Producto p) {
+		
+		productService.edit(p);
+		
+		return "redirect:/";
+		
+	}
+	
+	@GetMapping("/borrar/{id}")
+	public String borrarProducto(@PathVariable("id") Long id) {
+		
+		Optional<Producto> aBorrar = productService.findById(id);
+		if (aBorrar.isPresent()) {
+			productService.delete(aBorrar.get());			
+		}
+		return "redirect:/";
+		
+	}
+	
 	
 	
 	

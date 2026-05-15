@@ -1,4 +1,4 @@
-package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.entities;
+package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import lombok.ToString;
 public class Pedido {
 
 	@Id
-	private Long codigo_pedido;
+	private Long codigoPedido;
 	private LocalDateTime fecha;
 	private double total;
 	
@@ -39,8 +39,10 @@ public class Pedido {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	@Builder.Default
-	private List<LineaVenta> lineasVenta = new ArrayList<>();
+	private List<LineaPedido> lineasVenta = new ArrayList<>();
 
+	
+	/*
 	public void addToCliente(Cliente cliente) {
 		this.cliente = cliente;
 		cliente.getPedidos().add(this);
@@ -50,5 +52,7 @@ public class Pedido {
 		cliente.getPedidos().remove(this);
 		this.cliente = null;
 	}
+	*/
+	
 }
 

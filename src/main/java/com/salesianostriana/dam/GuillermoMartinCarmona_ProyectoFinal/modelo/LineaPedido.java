@@ -1,4 +1,4 @@
-package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.entities;
+package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-public class LineaVenta {
+public class LineaPedido {
 
 	@Id @GeneratedValue
 	private Long id;
@@ -33,6 +33,8 @@ public class LineaVenta {
 		foreignKey = @ForeignKey(name = "fk_lineaventa_producto"))
 	private Producto producto;
 
+	
+	/*
 	public void addToPedido(Pedido pedido) {
 		this.pedido = pedido;
 		pedido.getLineasVenta().add(this);
@@ -52,4 +54,6 @@ public class LineaVenta {
 		producto.getLineasVenta().remove(this);
 		this.producto = null;
 	}
+	*/
+	
 }
