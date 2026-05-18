@@ -11,32 +11,30 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Producto;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.ProductoService;
 
 @Controller
-@RequestMapping("/admin")
+//@RequestMapping("/admin")
 public class ProductoController {
 
 	@Autowired
 	private ProductoService productService;
 	
-	@GetMapping ({"/"})
+	@GetMapping ({"/list"})
 	public String listadoProductos(Model model) {
 		
-		System.out.println(productService.toString());
-		model.addAttribute("listaProductos", productService.getList());
+		model.addAttribute("listaProductos", productService.findAll());
 		
-		return "productolist";
+		return "productlist";
 		
 	}
 	
 	@GetMapping ({"/listSort"})
 	public String listadoProductosOrdenadoMax(Model model) {
 		
-		List<Producto> listaOrdenada = productService.getList();
+		List<Producto> listaOrdenada = productService.findAll();
 		//metodo de la api para ordenar los precios de mayor a menor usando un comparador.
 		listaOrdenada.sort(Comparator.comparing(Producto::getPrecio).reversed());
 		
@@ -58,7 +56,8 @@ public class ProductoController {
 	@PostMapping("/nuevo/submit")
 	public String procesaFormularioProducto(@ModelAttribute("producto") Producto producto) {
 		
-		productService.agregarProducto(producto);
+		//productService.agregarProducto(producto);
+		productService.save(producto);
 		
 		return "redirect:/";
 	
@@ -89,11 +88,11 @@ public class ProductoController {
 	@GetMapping ("/editar/{id}")
 	public String editarProductoFormulario(@PathVariable("id") Long id, Model model) {
 
-		Optional<Producto> aEditar = productService.findById(id);
+		Optional<Producto> productoEditar = productService.findById(id);
 		
-		if (aEditar.isPresent()) {
-			model.addAttribute("alumno", aEditar.get());
-			return "productoform";
+		if (productoEditar.isPresent()) {
+			model.addAttribute("producto", productoEditar);
+			return "productform";
 		} else {
 			return "redirect:/";
 		}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Gourmet</title>
+</head>
+<body>
+	
+	<div th:remplace="~{fragments/general :: cabecera}"></div>
+	
+	<a href="#" th:href="@{/nuevoProducto}">Insertar un nuevo producto</a>
+	
+		
+	<h2>Lista de Prodcutos</h2>
+	
+	<table border="1">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Nombre</th>
+				<th>Precio</th>
+				<th>Descripción</th>
+				<th>Stock</th>
+				<th>Categoría</th>
+				<th>Caducidad</th>
+				<th>Acciones</th>
+			</tr>
+		</thead>
+		<tbody th:remove="all-but-first">
+			<tr th:each="producto : ${listaProductos}">
+			    <td th:text="${producto.codigoProducto}"></td>
+			    <td th:text="${producto.nombre}"></td>
+			    <td th:text="${#numbers.formatDecimal(producto.precio, 1, 2) + ' €'}"></td>
+			    <td th:text="${producto.descripcion}"></td>
+			    <td th:text="${producto.stock}"></td>
+			    <td th:text="${producto.categoria}"></td>
+			    <td th:text="${#temporals.format(producto.fechaCaducidad, 'dd/MM/yyyy')}"></td>
+				<td class="text-center">
+					<div class="btn-group btn-group-sm" role="group">
+						<a th:href="@{/productlist/editar/{id}(id=${producto.codigoProducto})}"
+							class="btn btn-outline-primary">
+							<i class="bi bi-pencil-square"></i> Editar
+						</a>
+						<button type="button" th:data-bs-id="${producto.codigoProducto}">
+							<i class="bi bi-trash"></i> Borrar
+						</button>
+					</div>
+				</td>
+
+			</tr>
+		</tbody>		
+	</table>
+		
+</body>
+</html>
