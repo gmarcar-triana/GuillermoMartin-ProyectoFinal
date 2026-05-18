@@ -24,7 +24,7 @@ import lombok.ToString;
 @Entity
 public class Producto {
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long codigoProducto;
 	
 	private String nombre;

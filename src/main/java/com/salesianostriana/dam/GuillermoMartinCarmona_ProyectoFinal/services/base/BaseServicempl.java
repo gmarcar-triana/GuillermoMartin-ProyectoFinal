@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public abstract class BaseServicempl<T, ID, R extends JpaRepository<T, ID>> implements BaseService<T, ID> {
 
@@ -25,6 +26,7 @@ public abstract class BaseServicempl<T, ID, R extends JpaRepository<T, ID>> impl
 	public T save(T t) {
 		return repository.save(t);
 	}
+	
 	@Override
 	public T edit(T t) {
 		return repository.save(t);
@@ -40,5 +42,5 @@ public abstract class BaseServicempl<T, ID, R extends JpaRepository<T, ID>> impl
 	public void deleteById(ID id) {
 		repository.deleteById(id);
 	}
-
+	
 }

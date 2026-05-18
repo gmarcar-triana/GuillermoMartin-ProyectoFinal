@@ -1,26 +1,95 @@
 <!DOCTYPE html>
-<html lang="es" xmlns="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saludator</title>
-	<!--<link rel="stylesheet" th:href="@{/css/estyle.css}" >-->
 </head>
 
 <body>
-    <header th:fragment="cabecera">
-        <nav>
-            <h1>Tienda de Productos Gourmet</h1>
+    <div th:fragment="cabecera">
+        <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container-fluid px-4">
+
+                <button class="btn btn-light border-0" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasSecciones" aria-controls="offcanvasSecciones">
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+
+                <a class="navbar-brand fw-bold text-primary mx-auto" href="/">
+                    <i class="bi bi-shop me-2"></i>GourmetApp
+                </a>
+
+                <button class="btn btn-light border-0 position-relative" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasCarrito" aria-controls="offcanvasCarrito">
+                    <i class="bi bi-cart3 fs-4"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                        style="font-size: 0.65rem;">
+                        0
+                    </span>
+                </button>
+
+            </div>
         </nav>
-    </header>
 
-    <footer th:fragment="pie">
-        <div>
-            <p>&copy; 2026 <span>Tienda de Productos Gourmet</span>. Todos los derechos reservados.</p>
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSecciones"
+            aria-labelledby="offcanvasSeccionesLabel">
+            <div class="offcanvas-header border-bottom">
+                <h5 class="offcanvas-title fw-bold" id="offcanvasSeccionesLabel"><i
+                        class="bi bi-grid-fill me-2 text-primary"></i>Secciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+            </div>
+            <div class="offcanvas-body p-0">
+                <div class="list-group list-group-flush">
+                    <a href="/" class="list-group-item list-group-item-action py-3 px-4">
+                        <i class="bi bi-house-door me-3 text-secondary"></i>Inicio
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action py-3 px-4">
+                        <i class="bi bi-box-seam me-3 text-secondary"></i>Catálogo de Productos
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action py-3 px-4">
+                        <i class="bi bi-tags me-3 text-secondary"></i>Ofertas
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action py-3 px-4">
+                        <i class="bi bi-person me-3 text-secondary"></i>Mi Perfil
+                    </a>
+                </div>
+            </div>
         </div>
-    </footer>
 
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCarrito"
+            aria-labelledby="offcanvasCarritoLabel">
+            <div class="offcanvas-header border-bottom bg-light">
+                <h5 class="offcanvas-title fw-bold" id="offcanvasCarritoLabel"><i
+                        class="bi bi-cart4 me-2 text-primary"></i>Tu Carrito</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+            </div>
+            <div class="offcanvas-body d-flex flex-column">
+
+                <div class="flex-grow-1 d-flex flex-column align-items-center justify-content-center text-muted">
+                    <i class="bi bi-cart-x display-1 mb-3 text-light"></i>
+                    <p class="fs-5">Tu carrito está vacío</p>
+                    <p class="small text-center px-4">Añade algunos productos deliciosos para comenzar tu pedido.</p>
+                </div>
+
+                <div class="mt-auto border-top pt-3">
+                    <div class="d-flex justify-content-between mb-3 fw-bold fs-5">
+                        <span>Total:</span>
+                        <span>0.00 €</span>
+                    </div>
+                    <button class="btn btn-primary w-100 py-2 rounded-pill fw-bold" disabled>Ir a Pagar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="pie">
+        <footer class="bg-dark text-white text-center py-3 fixed-bottom shadow-lg">
+            <div class="container">
+                <p class="mb-0 small">&copy; 2026 <span class="text-primary fw-bold">GourmetApp</span>. Todos los
+                    derechos reservados.</p>
+            </div>
+        </footer>
+    </div>
 
 </body>
 
