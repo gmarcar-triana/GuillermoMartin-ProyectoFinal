@@ -33,7 +33,7 @@ public class Pedido {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cliente_id",
 		foreignKey = @ForeignKey(name = "fk_pedido_cliente"))
-	private Cliente cliente;
+	private Usuario cliente;
 	
 	@OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER)
 	@ToString.Exclude
