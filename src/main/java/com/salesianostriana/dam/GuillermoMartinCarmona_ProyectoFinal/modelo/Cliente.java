@@ -18,9 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @SuppressWarnings("serial")
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @DiscriminatorValue("C")
 public class Cliente extends Usuario{
