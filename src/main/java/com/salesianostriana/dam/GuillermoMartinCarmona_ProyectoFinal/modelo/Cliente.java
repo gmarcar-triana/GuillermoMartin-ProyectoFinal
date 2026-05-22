@@ -30,8 +30,8 @@ public class Cliente extends Usuario{
 	private List<Pedido> pedidos = new ArrayList<>();
 	
 	public Cliente(Long codigoUsuario, String username, String password, String nombre, String apellidos, String email,
-			String telefono, List<Pedido> pedidos) {
-		super(codigoUsuario, username, password, nombre, apellidos, email, telefono);
+			String telefono, String roles, List<Pedido> pedidos) {
+		super(codigoUsuario, username, password, nombre, apellidos, email, telefono, roles);
 		this.pedidos = pedidos;
 	}
 

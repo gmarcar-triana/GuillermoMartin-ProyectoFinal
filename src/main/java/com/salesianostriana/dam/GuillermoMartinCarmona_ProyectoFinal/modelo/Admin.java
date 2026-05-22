@@ -15,8 +15,8 @@ import jakarta.persistence.Entity;
 public class Admin extends Usuario {
 
 	public Admin(Long codigoUsuario, String username, String password, String nombre, String apellidos, String email,
-			String telefono) {
-		super(codigoUsuario, username, password, nombre, apellidos, email, telefono);
+			String telefono, String roles) {
+		super(codigoUsuario, username, password, nombre, apellidos, email, telefono, roles);
 	}
 
 	@Override

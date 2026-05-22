@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @SuppressWarnings("serial")
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Usuario implements UserDetails {
@@ -31,10 +30,12 @@ public abstract class Usuario implements UserDetails {
 	private String apellidos;
 	private String email;
 	private String telefono;
+	
+	private String roles;
 
 
 	public Usuario(Long codigoUsuario, String username, String password, String nombre, String apellidos, String email,
-			String telefono) {
+			String telefono, String roles) {
 		this.codigoUsuario = codigoUsuario;
 		this.username = username;
 		this.password = password;
@@ -42,6 +43,7 @@ public abstract class Usuario implements UserDetails {
 		this.apellidos = apellidos;
 		this.email = email;
 		this.telefono = telefono;
+		this.roles = roles;
 	}
 	
 	

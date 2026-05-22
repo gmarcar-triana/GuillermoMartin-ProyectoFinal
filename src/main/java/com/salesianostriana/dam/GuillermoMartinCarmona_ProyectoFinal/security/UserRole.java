@@ -1,5 +1,7 @@
 package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.security;
 
-public class RoleBasedSuccessHandler {
+public enum UserRole {
 
+	USER, ADMIN
+	
 }
