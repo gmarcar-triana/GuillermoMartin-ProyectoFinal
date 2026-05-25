@@ -42,4 +42,13 @@ public class Producto {
 	@Builder.Default
 	private List<LineaPedido> lineasVenta = new ArrayList<>();
 		
+	/*
+	public double getPrecioFinal(boolean descuento, int porDescuento) {
+		if(descuento) {
+			return precio * (1-porDescuento);
+		}
+		return precio;
+		
+	}*/
+	
 }

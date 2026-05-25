@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo;
 
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
@@ -8,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

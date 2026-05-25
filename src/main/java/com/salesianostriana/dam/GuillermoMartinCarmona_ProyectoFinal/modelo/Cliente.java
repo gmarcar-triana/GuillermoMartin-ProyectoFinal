@@ -12,9 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @SuppressWarnings("serial")
@@ -26,7 +24,6 @@ public class Cliente extends Usuario{
 	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
-	@Builder.Default
 	private List<Pedido> pedidos = new ArrayList<>();
 	
 	public Cliente(Long codigoUsuario, String username, String password, String nombre, String apellidos, String email,
