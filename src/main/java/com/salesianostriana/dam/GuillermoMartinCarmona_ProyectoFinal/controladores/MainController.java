@@ -22,10 +22,35 @@ public class MainController {
 		
 		List<Producto> productos;
 		
-		productos=productoService.obtenerProductos();
+		productos=productoService.obtenerProductoslimitados();
 		model.addAttribute("listaProductos", productos);
 		
 		return "index";
+		
+	}
+	
+	@GetMapping("/productos")
+	public String listadoProductos(Model model) {
+
+		List<Producto> productos;
+		
+		productos=productoService.obtenerTodosProductos();
+		model.addAttribute("listaProductos", productos);
+
+		return "productos";
+
+	}
+	
+	
+	@GetMapping("/ofertas")
+	public String listadoOfertas(Model model) {
+		
+		List<Producto> productos;
+		
+		productos=productoService.obtenerProductosEnOferta();
+		model.addAttribute("listaProductos", productos);
+		
+		return "ofertaslist";
 		
 	}
 	

@@ -23,12 +23,15 @@ public class ProductoController {
 	@Autowired
 	private ProductoService productoService;
 
-	@GetMapping({ "/list" })
+	@GetMapping("/productosCrud")
 	public String listadoProductos(Model model) {
 
-		model.addAttribute("listaProductos", productoService.findAll());
+		List<Producto> productos;
+		
+		productos=productoService.obtenerTodosProductos();
+		model.addAttribute("listaProductos", productos);
 
-		return "productlist";
+		return "/admin/productoscrud";
 
 	}
 
@@ -36,8 +39,7 @@ public class ProductoController {
 	public String listadoProductosOrdenadoMax(Model model) {
 
 		List<Producto> listaOrdenada = productoService.findAll();
-		// metodo de la api para ordenar los precios de mayor a menor usando un
-		// comparador.
+		// metodo de la api para ordenar los precios de mayor a menor usando un comparador.
 		listaOrdenada.sort(Comparator.comparing(Producto::getPrecio).reversed());
 
 		model.addAttribute("listaProductos", listaOrdenada);
@@ -51,14 +53,13 @@ public class ProductoController {
 
 		model.addAttribute("producto", new Producto());
 
-		return "productform";
+		return "/admin/productform";
 
 	}
 
 	@PostMapping("/nuevo/submit")
 	public String procesaFormularioProducto(@ModelAttribute("producto") Producto producto) {
 
-		// productService.agregarProducto(producto);
 		productoService.save(producto);
 
 		return "redirect:/";

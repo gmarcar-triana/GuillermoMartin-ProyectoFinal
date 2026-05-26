@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Gourmet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+	
+	<div th:replace="~{fragments/general :: cabecera}"></div>
+	
+	<div class="container mt-5 bg-white p-4 rounded-4 shadow-sm">
+        
+    	<div class="d-flex justify-content-between align-items-center mb-4">
+        	<h2 class="m-0 fw-bold text-dark">Lista de Productos</h2>
+            <a href="#" th:href="@{/nuevoProducto}" class="btn btn-success fw-semibold shadow-sm">
+            	<i class="bi bi-plus-circle me-1"></i> Añadir Producto
+            </a>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                		<th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Descripción</th>
+                        <th>Stock</th>
+                        <th>Categoría</th>
+                        <th>Caducidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody th:remove="all-but-first">
+                    <tr th:each="producto : ${listaProductos}">
+                        <td class="fw-bold text-secondary" th:text="${producto.codigoProducto}"></td>
+                        <td th:text="${producto.nombre}"></td>
+                        <td class="fw-semibold" th:text="${#numbers.formatDecimal(producto.precio, 1, 2) + ' €'}"></td>
+                        
+                        <td class="text-start text-truncate" style="max-width: 200px;" th:text="${producto.descripcion}"></td>
+                        
+                        <td>
+                            <span class="badge" 
+								th:classappend="${producto.stock ? 'bg-success' : 'bg-danger'}"
+                                th:text="${producto.stock}">
+                            </span>
+                        </td>
+                        
+                        <td th:text="${producto.categoria}"></td>
+                        <td th:text="${#temporals.format(producto.fechaCaducidad, 'dd/MM/yyyy')}"></td>
+                        
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a th:href="@{/productlist/editar/{id}(id=${producto.codigoProducto})}"
+                                    class="btn btn-outline-primary">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                </a>
+                                <button type="button" class="btn btn-outline-danger" th:data-bs-id="${producto.codigoProducto}">
+                                    <i class="bi bi-trash"></i> Borrar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>		
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -24,7 +24,7 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(
 				(authz) -> authz
 					.requestMatchers("/producto/**").authenticated()
-					.requestMatchers("/", "/index", "/carrito", "/login", "/css/**", "/js/**", "/img/**").permitAll()
+					.requestMatchers("/", "/**").permitAll()					
 					.anyRequest()
 					.authenticated())
 					//.permitAll())
@@ -35,7 +35,7 @@ public class SecurityConfig {
 		          })
 				.formLogin(form -> form
 						.loginPage("/login")
-						.defaultSuccessUrl("/producto/list", true)
+						.defaultSuccessUrl("/productos", true)
 						.permitAll()
 				);
 
@@ -50,16 +50,16 @@ public class SecurityConfig {
 	@Bean
 	UserDetailsService userDetailsService() {
 		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-/*
+
 		UserDetails user = User.builder().username("user").password("{noop}user").roles("USER").build();
 
 		UserDetails admin = User.builder().username("admin").password("{noop}admin").roles("ADMIN").build();
-*/
-		
+
+		/*
 		Usuario admin = new Cliente();
 			admin.setUsername("admin");
 			admin.setPassword("{noop}admin");
-		
+		*/
 		
 		manager.createUser(user);
 		manager.createUser(admin);

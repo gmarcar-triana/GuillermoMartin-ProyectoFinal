@@ -23,14 +23,24 @@ public class ProductoService extends BaseServicempl<Producto, Long, ProductoRepo
 		return productoRepositorio.findByNombreContainingIgnoreCase(termino, pageable);
 	}
 	
+	public List<Producto> obtenerTodosProductos() {
+		
+		return repository.findAll();
+		
+	}
 	
-	
-	public List<Producto> obtenerProductos() {
+	public List<Producto> obtenerProductoslimitados() {
 		
 		List<Long> listaIds=repository.obtenerIds();
 		listaIds=listaIds.stream().limit(10).collect(Collectors.toList());
 		return repository.findAllById(listaIds);
 				
+	}
+	
+	public List<Producto> obtenerProductosEnOferta() {
+		
+		return repository.findProductosConDescuento();
+		
 	}
 	
 }

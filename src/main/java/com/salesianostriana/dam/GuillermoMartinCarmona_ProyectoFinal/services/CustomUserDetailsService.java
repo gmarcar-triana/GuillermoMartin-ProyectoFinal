@@ -9,7 +9,7 @@ import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.repositorio
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 

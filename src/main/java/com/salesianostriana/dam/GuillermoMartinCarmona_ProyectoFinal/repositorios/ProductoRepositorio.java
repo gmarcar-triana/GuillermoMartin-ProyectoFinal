@@ -14,9 +14,13 @@ public interface ProductoRepositorio extends JpaRepository<Producto, Long>{
 	@Query("select p.id from Producto p")
 	public List<Long> obtenerIds();
 	
+	@Query("SELECT p FROM Producto p WHERE p.descuento > 0")
+    List<Producto> findProductosConDescuento();
+	
 	public List<Producto> findByNombreContainingIgnoreCase(String nombre);
 	
 	public Page<Producto> findByNombreContainingIgnoreCase(String nombre, Pageable pageable);
 
+	
 	
 }

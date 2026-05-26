@@ -33,6 +33,7 @@ public class Producto {
 	private boolean stock;
 	private String categoria;
 	private LocalDate fechaCaducidad;
+	private double descuento;
 	
 	private String imagenUrl;
 	
@@ -42,13 +43,13 @@ public class Producto {
 	@Builder.Default
 	private List<LineaPedido> lineasVenta = new ArrayList<>();
 		
-	/*
-	public double getPrecioFinal(boolean descuento, int porDescuento) {
-		if(descuento) {
-			return precio * (1-porDescuento);
-		}
-		return precio;
-		
-	}*/
+	
+	public double getPrecioFinal() {
+		return precio - ((precio * descuento) / 100.0);	
+	}
+	
+	public boolean tieneDescuento() {
+		return (descuento > 0);
+	}
 	
 }
