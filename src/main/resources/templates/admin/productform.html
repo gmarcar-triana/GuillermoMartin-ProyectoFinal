@@ -29,13 +29,13 @@
 	
     <div class="container form-container">
         <h2 class="text-center mb-4">Añadir Nuevo Producto</h2>
-        <form method="POST" action="#" th:action="@{/admin/nuevo/submit}" th:object="${producto}">
-            <div class="mb-3">
-                <label class="form-label fw-bold">Nombre</label>
-                <input type="text" class="form-control" name="nombre" th:field="${producto.nombre}"
-                    placeholder="Nombre..." />
-            </div>
-            <div class="mb-3">
+		<form method="POST" action="#" th:action="@{/admin/nuevo/submit}" th:object="${producto}">
+		    <input type="hidden" th:field="${producto.codigoProducto}" />
+		    <div class="mb-3">
+		        <label class="form-label fw-bold">Nombre</label>
+		        <input type="text" class="form-control" name="nombre" th:field="${producto.nombre}" placeholder="Nombre..." />
+		    </div>
+			<div class="mb-3">
                 <label class="form-label fw-bold">Precio</label>
                 <input type="text" class="form-control" name="precio" th:field="${producto.precio}"
                     placeholder="Precio..." />

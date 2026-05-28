@@ -55,6 +55,8 @@ public class ProductoController {
 
 	}
 
+
+	// Metodos CRUD para la gestion de los productos
 	@GetMapping("/nuevoProducto")
 	public String mosrtrarFormularioProducto(Model model) {
 
@@ -69,51 +71,21 @@ public class ProductoController {
 
 		productoService.save(producto);
 
-		return "redirect:/";
+		return "redirect:/admin/productosCrud";
 
 	}
-
-	@GetMapping({ "/producto" })
-	public String showFormProducto(Model model) {
-
-		Producto producto = new Producto();
-		model.addAttribute("productoForm", producto);
-
-		return "formProducto";
-
-	}
-
-	// Metodos CRUD para la gestion de los productos
-
-	@PostMapping({ "/addProducto" })
-	public String formularioAgregarProducto(@ModelAttribute("productoForm") Producto producto, Model model) {
-
-		model.addAttribute("producto", producto);
-
-		return "agregar";
-
-	}
-
+	
 	@GetMapping("/editar/{id}")
 	public String editarProductoFormulario(@PathVariable("id") Long id, Model model) {
 
 		Optional<Producto> productoEditar = productoService.findById(id);
-
+	
 		if (productoEditar.isPresent()) {
-			model.addAttribute("producto", productoEditar);
-			return "/admin/productFormEdit";
+			model.addAttribute("producto", productoEditar.get());
+			return "/admin/productForm";
 		} else {
 			return "redirect:/admin/productoscrud";
 		}
-
-	}
-
-	@PostMapping("/editar/submit")
-	public String procesarFormularioEdicionProducto(@ModelAttribute("producto") Producto p) {
-
-		productoService.edit(p);
-
-		return "redirect:/admin/productosCrud";
 
 	}
 

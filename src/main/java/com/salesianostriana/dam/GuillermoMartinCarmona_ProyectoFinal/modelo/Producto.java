@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +34,7 @@ public class Producto {
 	private String descripcion;
 	private boolean stock;
 	private String categoria;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaCaducidad;
 	private double descuento;
 	

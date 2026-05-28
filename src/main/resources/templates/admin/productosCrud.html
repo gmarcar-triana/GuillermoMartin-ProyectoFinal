@@ -58,9 +58,13 @@
                                     class="btn btn-outline-primary">
                                     <i class="bi bi-pencil-square"></i> Editar
                                 </a>
+								<a th:href="@{/detalles/{id}(id=${producto.codigoProducto})}"
+								    class="btn btn-outline-warning">
+								    <i class="bi bi-eye"></i> Detalles
+								</a>
 								<a th:href="@{/admin/borrar/{id}(id=${producto.codigoProducto})}"
 								    class="btn btn-outline-danger">
-								    <i class="bi bi-pencil-square"></i> Borrar
+								    <i class="bi bi-trash"></i> Borrar
 								</a>
                             </div>
                         </td>
