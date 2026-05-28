@@ -15,7 +15,7 @@
         
     	<div class="d-flex justify-content-between align-items-center mb-4">
         	<h2 class="m-0 fw-bold text-dark">Lista de Productos</h2>
-            <a href="#" th:href="@{/nuevoProducto}" class="btn btn-success fw-semibold shadow-sm">
+            <a href="#" th:href="@{/admin/nuevoProducto}" class="btn btn-success fw-semibold shadow-sm">
             	<i class="bi bi-plus-circle me-1"></i> Añadir Producto
             </a>
         </div>
@@ -54,13 +54,14 @@
                         
                         <td>
                             <div class="btn-group btn-group-sm" role="group">
-                                <a th:href="@{/productlist/editar/{id}(id=${producto.codigoProducto})}"
+                                <a th:href="@{/admin/editar/{id}(id=${producto.codigoProducto})}"
                                     class="btn btn-outline-primary">
                                     <i class="bi bi-pencil-square"></i> Editar
                                 </a>
-                                <button type="button" class="btn btn-outline-danger" th:data-bs-id="${producto.codigoProducto}">
-                                    <i class="bi bi-trash"></i> Borrar
-                                </button>
+								<a th:href="@{/admin/borrar/{id}(id=${producto.codigoProducto})}"
+								    class="btn btn-outline-danger">
+								    <i class="bi bi-pencil-square"></i> Borrar
+								</a>
                             </div>
                         </td>
                     </tr>

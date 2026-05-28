@@ -15,7 +15,9 @@ public interface ProductoRepositorio extends JpaRepository<Producto, Long>{
 	public List<Long> obtenerIds();
 	
 	@Query("SELECT p FROM Producto p WHERE p.descuento > 0")
-    List<Producto> findProductosConDescuento();
+    public List<Producto> findProductosConDescuento();
+	
+	public List<Producto> findByCategoria(String nombre);
 	
 	public List<Producto> findByNombreContainingIgnoreCase(String nombre);
 	

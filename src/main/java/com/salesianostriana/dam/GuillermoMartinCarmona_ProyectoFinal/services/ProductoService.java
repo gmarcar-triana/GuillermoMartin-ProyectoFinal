@@ -1,6 +1,8 @@
 package com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services;
 
+import java.util.Collections;
 import java.util.List;
+//import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,11 @@ public class ProductoService extends BaseServicempl<Producto, Long, ProductoRepo
 	private ProductoRepositorio productoRepositorio;
 	
 	public Page<Producto> buscarProductos(String termino, Pageable pageable) {
+		
 		return productoRepositorio.findByNombreContainingIgnoreCase(termino, pageable);
+		
 	}
+	
 	
 	public List<Producto> obtenerTodosProductos() {
 		
@@ -29,10 +34,18 @@ public class ProductoService extends BaseServicempl<Producto, Long, ProductoRepo
 		
 	}
 	
-	public List<Producto> obtenerProductoslimitados() {
+	public List<Producto> obtenerProductosPorCategoria(String nombre) {
+		
+		return productoRepositorio.findByCategoria(nombre);
+		
+	}
+	
+	
+	public List<Producto> obtenerProductoslimitadosAleatorios(int num) {
 		
 		List<Long> listaIds=repository.obtenerIds();
-		listaIds=listaIds.stream().limit(10).collect(Collectors.toList());
+		Collections.shuffle(listaIds);
+		listaIds=listaIds.stream().limit(num).collect(Collectors.toList());
 		return repository.findAllById(listaIds);
 				
 	}
@@ -42,5 +55,16 @@ public class ProductoService extends BaseServicempl<Producto, Long, ProductoRepo
 		return repository.findProductosConDescuento();
 		
 	}
+	
+	/*
+	public Producto obtenerIdProducto(Long id) {
+		
+		Optional<Producto> productoOptional = productoRepositorio.findById(id);
+				
+		return productoOptional.orElseThrow(() ->
+				new IllegalArgumentException("El Producto no existe"));
+		
+	}
+*/
 	
 }

@@ -40,7 +40,7 @@ public class CarritoController {
         
         carritoService.addProducto(producto);
         	    		 	
-        return "redirect:/carrito";
+        return "redirect:/";
     }
 	
     @GetMapping("/borrarProducto/{id}")
@@ -49,7 +49,7 @@ public class CarritoController {
         return "redirect:/carrito";
     }
     
-    @ModelAttribute("total_carrito")
+    @ModelAttribute("totalCarrito")
     public Double totalCarrito () {
     	
     	Map <Producto,Integer> carrito=carritoService.getProductsInCart();

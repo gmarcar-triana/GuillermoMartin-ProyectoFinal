@@ -25,11 +25,10 @@
 
 <body>
 	<div th:replace="~{fragments/general :: cabecera}"></div>
-
 	
     <div class="container form-container">
-        <h2 class="text-center mb-4">Añadir Nuevo Producto</h2>
-        <form method="POST" action="#" th:action="@{/admin/nuevo/submit}" th:object="${producto}">
+        <h2 class="text-center mb-4">Editar Producto</h2>
+        <form method="POST" action="#" th:action="@{/admin/editar/submit}" th:object="${producto}">
             <div class="mb-3">
                 <label class="form-label fw-bold">Nombre</label>
                 <input type="text" class="form-control" name="nombre" th:field="${producto.nombre}"
@@ -86,7 +85,6 @@
     </div>
 	
 	<div th:replace="~{fragments/general :: pie}"></div>
-
 
 </body>
 

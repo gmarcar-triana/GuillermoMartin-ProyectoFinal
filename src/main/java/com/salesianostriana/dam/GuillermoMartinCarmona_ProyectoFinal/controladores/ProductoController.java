@@ -23,6 +23,13 @@ public class ProductoController {
 	@Autowired
 	private ProductoService productoService;
 
+	@GetMapping("/dashboard")
+	public String enrutadorDashboard() {
+		
+		return "/admin/dashboard";
+		
+	}
+	
 	@GetMapping("/productosCrud")
 	public String listadoProductos(Model model) {
 
@@ -94,9 +101,9 @@ public class ProductoController {
 
 		if (productoEditar.isPresent()) {
 			model.addAttribute("producto", productoEditar);
-			return "productform";
+			return "/admin/productFormEdit";
 		} else {
-			return "redirect:/";
+			return "redirect:/admin/productoscrud";
 		}
 
 	}
@@ -106,7 +113,7 @@ public class ProductoController {
 
 		productoService.edit(p);
 
-		return "redirect:/";
+		return "redirect:/admin/productosCrud";
 
 	}
 
@@ -117,7 +124,8 @@ public class ProductoController {
 		if (aBorrar.isPresent()) {
 			productoService.delete(aBorrar.get());
 		}
-		return "redirect:/";
+		
+		return "redirect:/admin/productosCrud";
 
 	}
 
