@@ -23,10 +23,10 @@
                 <button class="btn btn-light border-0 position-relative" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasCarrito" aria-controls="offcanvasCarrito">
                     <i class="bi bi-cart3 fs-4"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                        style="font-size: 0.65rem;">
-                        0
-                    </span>
+                    <span id="carritoCount"
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                          style="font-size: 0.65rem;"
+                          th:text="${cantidadCarrito != null ? cantidadCarrito : 0}">0</span>
                 </button>
 
             </div>
@@ -58,7 +58,8 @@
         </div>
 
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCarrito"
-            aria-labelledby="offcanvasCarritoLabel">
+            aria-labelledby="offcanvasCarritoLabel"
+            th:attr="data-abrir-carrito=${abrirCarrito != null and abrirCarrito}">
             <div class="offcanvas-header border-bottom bg-light">
                 <h5 class="offcanvas-title fw-bold" id="offcanvasCarritoLabel"><i
                         class="bi bi-cart4 me-2 text-primary"></i>Tu Carrito</h5>
@@ -66,24 +67,67 @@
             </div>
             <div class="offcanvas-body d-flex flex-column">
 
-                <div class="flex-grow-1 d-flex flex-column align-items-center justify-content-center text-muted">
+                <div th:if="${carritoItems == null or carritoItems.isEmpty()}"
+                     class="flex-grow-1 d-flex flex-column align-items-center justify-content-center text-muted">
                     <i class="bi bi-cart-x display-1 mb-3 text-light"></i>
                     <p class="fs-5">Tu carrito está vacío</p>
                     <p class="small text-center px-4">Añade algunos productos deliciosos para comenzar tu pedido.</p>
                 </div>
 
+                <div th:if="${carritoItems != null and !carritoItems.isEmpty()}"
+                     class="flex-grow-1 overflow-auto">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-0 py-3"
+                            th:each="entry : ${carritoItems}">
+                            <div class="d-flex align-items-center gap-3">
+                                <img th:src="${entry.key.imagenUrl}"
+                                     alt="img"
+                                     class="rounded-3 object-fit-cover flex-shrink-0"
+                                     style="width: 56px; height: 56px;" />
+                                <div class="flex-grow-1">
+                                    <p class="mb-0 fw-semibold text-truncate"
+                                       style="max-width: 160px;"
+                                       th:text="${entry.key.nombre}">Nombre</p>
+                                    <small class="text-muted">
+                                        <span th:text="${#numbers.formatDecimal(entry.key.precio * (1 - entry.key.descuento), 1, 2)}">0.00</span> €
+                                        × <span th:text="${entry.value}">1</span>
+                                    </small>
+                                </div>
+                                <span class="fw-bold text-primary text-nowrap">
+                                    <span th:text="${#numbers.formatDecimal(entry.key.precio * (1 - entry.key.descuento) * entry.value, 1, 2)}">0.00</span> €
+                                </span>
+                                <a th:href="@{/borrarProducto/{id}(id=${entry.key.codigoProducto})}"
+                                   class="btn btn-sm btn-outline-danger rounded-circle d-flex align-items-center justify-content-center"
+                                   style="width: 30px; height: 30px; padding: 0;"
+                                   title="Quitar producto">
+                                    <i class="bi bi-x" style="font-size: 1rem;"></i>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
                 <div class="mt-auto border-top pt-3">
                     <div class="d-flex justify-content-between mb-3 fw-bold fs-5">
                         <span>Total:</span>
-                        <span>0.00 €</span>
+                        <span class="text-primary">
+                            <span th:text="${#numbers.formatDecimal(totalCarrito != null ? totalCarrito : 0, 1, 2)}">0.00</span> €
+                        </span>
                     </div>
-                    <button class="btn btn-primary w-100 py-2 rounded-pill fw-bold" disabled>Ver toda la cesta</button>
+                    <a th:href="@{/carrito/tramitar}"
+                       class="btn btn-primary w-100 py-2 rounded-pill fw-bold"
+                       th:classappend="${carritoItems == null or carritoItems.isEmpty()} ? 'disabled' : ''">
+                        Ver toda la cesta
+                    </a>
                 </div>
             </div>
         </div>
+
+        <script th:src="@{/js/carrito.js}"></script>
+
     </div>
 	
-	<!--Plantilla de las tarjetas de productos-->
+	<!--Plantilla tarjetas de productos-->
 	<div th:fragment="productos">
 		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 g-4">
 
@@ -139,9 +183,7 @@
 
 		        </div>
 		    </div>
-
 		</div>
-
 	</div>
 	
 	<!--Plantilla footer de la web-->

@@ -8,10 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Producto;
+import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.ProductoService;
 
 @Controller
 public class CatalogoController {
-
+/*
+	private ProductoService productoService;
+	
 	@GetMapping({ "/listSort" })
 	public String listadoProductosOrdenadoMax(Model model) {
 
@@ -25,5 +28,5 @@ public class CatalogoController {
 
 	}
 
-	
+	*/
 }
