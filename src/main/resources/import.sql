@@ -124,3 +124,35 @@ INSERT INTO producto (nombre, precio, descripcion, stock, categoria, fecha_caduc
 INSERT INTO usuario (dtype, codigo_usuario, username, password, roles, nombre) VALUES ('A', 1001, 'admin', '{noop}admin', 'ADMIN', 'Administrador');
 INSERT INTO usuario (dtype, codigo_usuario, username, password, roles, nombre) VALUES ('C', 1002, 'user', '{noop}user', 'CLIENTE', 'Usuario Normal');
 */
+
+-- Pedidos de ejemplo (sin cliente asociado)
+INSERT INTO pedido (codigo_pedido, fecha, total) VALUES (1, '2026-05-01 10:30:00', 103.90);
+INSERT INTO pedido (codigo_pedido, fecha, total) VALUES (2, '2026-05-05 14:15:00', 245.50);
+INSERT INTO pedido (codigo_pedido, fecha, total) VALUES (3, '2026-05-10 09:00:00', 58.30);
+INSERT INTO pedido (codigo_pedido, fecha, total) VALUES (4, '2026-05-15 17:45:00', 380.00);
+INSERT INTO pedido (codigo_pedido, fecha, total) VALUES (5, '2026-05-22 11:20:00', 92.80);
+
+-- Líneas del Pedido 1 — Aceites y anchoas
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (2, 1, 1);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (1, 1, 14);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (3, 1, 7);
+
+-- Líneas del Pedido 2 — Quesos y jamón
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (1, 2, 50);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (2, 2, 38);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (1, 2, 17);
+
+-- Líneas del Pedido 3 — Especias y salsas
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (2, 3, 86);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (1, 3, 88);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (1, 3, 90);
+
+-- Líneas del Pedido 4 — Vinos premium
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (2, 4, 74);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (1, 4, 78);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (3, 4, 76);
+
+-- Líneas del Pedido 5 — Cafés y dulces
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (1, 5, 110);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (2, 5, 62);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (1, 5, 65);

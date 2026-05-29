@@ -36,19 +36,16 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
 		log.info("Authentication: " + authentication.toString());
 
-		// 1. Comprobar si el usuario intentaba acceder a una URL protegida antes del login
 		HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 
 		String redirectUrl;
 
 		if (savedRequest != null) {
-			// Hay una URL guardada: redirigir a donde el usuario quería ir
 			redirectUrl = savedRequest.getRedirectUrl();
 			log.info("Redirigiendo a la URL guardada: " + redirectUrl);
-			requestCache.removeRequest(request, response); // limpiar la sesión
+			requestCache.removeRequest(request, response);
 		} else {
-			// No hay URL guardada: usar la URL por defecto según el rol
 			String role = getMaxRole(authentication.getAuthorities());
 			log.info("Max role: " + role);
 			redirectUrl = determineTargetUrl(role);

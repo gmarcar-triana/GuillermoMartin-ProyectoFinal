@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var offcanvasEl = document.getElementById('offcanvasCarrito');
+    var offcanvasEl = document.querySelector('#offcanvasCarrito');
 
     if (!offcanvasEl) return;
 

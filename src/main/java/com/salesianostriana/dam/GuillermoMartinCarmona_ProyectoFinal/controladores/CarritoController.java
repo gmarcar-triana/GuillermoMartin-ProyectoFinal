@@ -110,5 +110,15 @@ public class CarritoController {
 
 		return "redirect:/";
 	}
+	
+	@GetMapping("/carrito/tramitar")
+	public String tramitarCarritoDeCompra() {
+		
+		
+		return "ticketTramite";
+		
+	}
+	
+	
 
 }

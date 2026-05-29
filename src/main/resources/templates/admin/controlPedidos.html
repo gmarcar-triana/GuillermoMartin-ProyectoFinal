@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Pedidos — Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{../css/style.css}">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/general :: cabecera}"></div>
+
+    <div class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold mb-1"><i class="bi bi-receipt me-2 text-success"></i>Control de Pedidos</h1>
+                <p class="text-muted mb-0">Listado de todos los pedidos registrados en el sistema</p>
+            </div>
+            <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Volver al Dashboard
+            </a>
+        </div>
+
+        <!-- Sin pedidos -->
+        <div th:if="${#lists.isEmpty(listaPedidos)}" class="text-center text-muted py-5">
+            <i class="bi bi-inbox display-1"></i>
+            <p class="fs-4 mt-3">No hay pedidos registrados todavía</p>
+        </div>
+
+        <!-- Tabla de pedidos -->
+        <div th:if="${!#lists.isEmpty(listaPedidos)}">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-4"># Pedido</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Líneas</th>
+                            <th>Productos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pedido : ${listaPedidos}">
+                            <td class="ps-4 fw-bold text-secondary">
+                                #<span th:text="${pedido.codigoPedido}"></span>
+                            </td>
+                            <td th:text="${#temporals.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td class="fw-bold text-success"
+                                th:text="${#numbers.formatDecimal(pedido.total, 1, 2) + ' €'}"></td>
+                            <td>
+                                <span class="badge bg-primary rounded-pill"
+                                    th:text="${pedido.lineasVenta.size()}">0</span>
+                            </td>
+                            <td>
+                                <!-- Lista de productos de cada línea -->
+                                <div th:each="linea : ${pedido.lineasVenta}" class="small">
+                                    <span class="badge bg-light text-dark border me-1 mb-1">
+                                        <span th:text="${linea.producto.nombre}"></span>
+                                        ×<span th:text="${linea.cantidad}"></span>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Resumen total -->
+            <div class="d-flex justify-content-end mt-3">
+                <div class="card border-0 shadow-sm rounded-3 px-4 py-3 bg-white">
+                    <span class="text-muted small">Total facturado</span>
+                    <div class="fw-bold fs-4 text-success">
+                        <span
+                            th:text="${#numbers.formatDecimal(listaPedidos.stream().mapToDouble(p -> p.total).sum(), 1, 2) + ' €'}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:replace="~{fragments/general :: pie}"></div>
+
+</body>
+
+</html>

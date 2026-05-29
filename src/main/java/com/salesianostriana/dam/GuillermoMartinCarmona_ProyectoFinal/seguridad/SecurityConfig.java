@@ -31,7 +31,7 @@ public class SecurityConfig {
 		http.authorizeHttpRequests((authz) -> authz
 					.requestMatchers("/admin/**").hasRole("ADMIN")
 					.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")
-					.requestMatchers("/", "/productos", "/ofertas", "/detalles/{id}", "/login",
+					.requestMatchers("/", "/productos", "/ofertas", "/detalles/{id}", "/login", "/logout",
 							"/agregarProducto/**", "/borrarProducto/**","/carrito", "/carrito/vaciar").permitAll()					
 					.anyRequest()
 					.authenticated())
@@ -44,7 +44,13 @@ public class SecurityConfig {
 				        .loginPage("/login")
 				        .successHandler(customSuccessHandler)
 				        .permitAll()
+				)
+				.logout(logout -> logout
+						.logoutUrl("/logout")
+						.logoutSuccessUrl("/")
+						.permitAll()
 				);
+				
 		
 		http.csrf((csrf) -> {
 			csrf.ignoringRequestMatchers("/h2/**");
@@ -62,6 +68,8 @@ public class SecurityConfig {
 
 		UserDetails admin = User.builder().username("admin").password("{noop}admin").roles("ADMIN").build();
 
+		UserDetails user2 = User.builder().username("user1").password("{noop}user1").roles("USER").build();
+		
 		/*
 		Usuario admin = new Cliente();
 			admin.setUsername("admin");
@@ -70,6 +78,7 @@ public class SecurityConfig {
 		
 		manager.createUser(user);
 		manager.createUser(admin);
+		manager.createUser(user2);
 
 		return manager;
 	}

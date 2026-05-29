@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Producto;
+import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.repositorios.PedidoRepositorio;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.ProductoService;
 
 @Controller
@@ -23,13 +24,24 @@ public class ProductoController {
 	@Autowired
 	private ProductoService productoService;
 
+	@Autowired
+	private PedidoRepositorio pedidoRepositorio;
+
 	@GetMapping("/dashboard")
 	public String enrutadorDashboard() {
 		
 		return "/admin/dashboard";
 		
 	}
-	
+
+	@GetMapping("/controlPedidos")
+	public String controlPedidos(Model model) {
+		
+		model.addAttribute("listaPedidos", pedidoRepositorio.findAll());
+		return "/admin/controlPedidos";
+		
+	}
+
 	@GetMapping("/productosCrud")
 	public String listadoProductos(Model model) {
 

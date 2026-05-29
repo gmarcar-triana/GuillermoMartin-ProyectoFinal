@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Producto;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.ProductoService;
@@ -17,8 +18,7 @@ public class MainController {
 
 	@Autowired
 	private ProductoService productoService;
-	
-	
+		
 	@GetMapping("/")
 	public String cargarIndex(Model model) {
 		
@@ -39,6 +39,17 @@ public class MainController {
 
 		return "productos";
 
+	}
+	
+	@GetMapping("/productos/{nombre}")
+	public String listarPorCategoria(@PathVariable("nombre") String nombre, Model model) {
+		
+		List<Producto> productos = productoService.obtenerProductosPorCategoria(nombre);
+		
+		model.addAttribute("listaProductos", productos);
+		return "productos";
+		
+		
 	}
 	
 	
