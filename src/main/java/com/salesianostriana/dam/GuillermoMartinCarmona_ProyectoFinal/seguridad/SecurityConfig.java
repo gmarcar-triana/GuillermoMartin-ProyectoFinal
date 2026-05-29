@@ -31,7 +31,8 @@ public class SecurityConfig {
 		http.authorizeHttpRequests((authz) -> authz
 					.requestMatchers("/admin/**").hasRole("ADMIN")
 					.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")
-					.requestMatchers("/", "/productos", "/ofertas", "/detalles/{id}", "/login").permitAll()					
+					.requestMatchers("/", "/productos", "/ofertas", "/detalles/{id}", "/login",
+							"/agregarProducto/**", "/borrarProducto/**","/carrito", "/carrito/vaciar").permitAll()					
 					.anyRequest()
 					.authenticated())
 				.requestCache(cache -> {

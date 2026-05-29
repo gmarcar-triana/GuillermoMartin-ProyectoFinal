@@ -88,9 +88,10 @@
 
                     <div class="mt-5 row g-2">
                         <div class="col-8 col-md-9">
-                            <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold" th:disabled="${!producto.stock}">
+                            <a th:href="@{/agregarProducto/{id}(id=${producto.codigoProducto})}" 
+							class="btn btn-primary w-100 py-3 rounded-pill fw-bold" th:disabled="${!producto.stock}">
                                 <i class="bi bi-bag-plus-fill me-2"></i> Añadir a la cesta
-                            </button>
+                            </a>
                         </div>
                     </div>
 

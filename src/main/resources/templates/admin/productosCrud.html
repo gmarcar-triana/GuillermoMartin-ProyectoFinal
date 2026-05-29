@@ -3,21 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos Gourmet</title>
+    <title>Productos Gourmet — Panel Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+	<script th:src="@{/js/buscadorProductos.js}"></script>
 </head>
 <body class="bg-light">
 	
 	<div th:replace="~{fragments/general :: cabecera}"></div>
 	
-	<div class="container mt-5 bg-white p-4 rounded-4 shadow-sm">
+	<div class="container mt-5 pt-4 bg-white p-4 rounded-4 shadow-sm">
         
     	<div class="d-flex justify-content-between align-items-center mb-4">
         	<h2 class="m-0 fw-bold text-dark">Lista de Productos</h2>
             <a href="#" th:href="@{/admin/nuevoProducto}" class="btn btn-success fw-semibold shadow-sm">
             	<i class="bi bi-plus-circle me-1"></i> Añadir Producto
             </a>
+        </div>
+
+        <div class="input-group mb-3" style="max-width: 380px;">
+            <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-search text-muted"></i>
+            </span>
+            <input type="text"
+                   id="buscador"
+                   class="form-control border-start-0 ps-0"
+                   placeholder="Buscar por nombre, categoría..."
+                   autocomplete="off">
         </div>
         
         <div class="table-responsive">
@@ -35,7 +47,7 @@
                     </tr>
                 </thead>
                 <tbody th:remove="all-but-first">
-                    <tr th:each="producto : ${listaProductos}">
+                    <tr class="fila-producto" th:each="producto : ${listaProductos}">
                         <td class="fw-bold text-secondary" th:text="${producto.codigoProducto}"></td>
                         <td th:text="${producto.nombre}"></td>
                         <td class="fw-semibold" th:text="${#numbers.formatDecimal(producto.precio, 1, 2) + ' €'}"></td>
@@ -44,8 +56,8 @@
                         
                         <td>
                             <span class="badge" 
-								th:classappend="${producto.stock ? 'bg-success' : 'bg-danger'}"
-                                th:text="${producto.stock}">
+							    th:classappend="${producto.stock ? 'bg-success' : 'bg-danger'}"
+                                th:text="${producto.stock ? 'Sí' : 'No'}">
                             </span>
                         </td>
                         
@@ -67,6 +79,12 @@
 								    <i class="bi bi-trash"></i> Borrar
 								</a>
                             </div>
+                        </td>
+                    </tr>
+                    <tr id="sinResultados" style="display: none;">
+                        <td colspan="8" class="text-center text-muted py-4">
+                            <i class="bi bi-search me-2 fs-4"></i>
+                            <span class="fs-5">No se encontraron productos para "<span id="terminoBusqueda"></span>"</span>
                         </td>
                     </tr>
                 </tbody>		

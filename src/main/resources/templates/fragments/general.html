@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+	<script th:src="@{/js/carrito.js}"></script>
 </head>
 
 <body>
@@ -114,7 +115,7 @@
                             <span th:text="${#numbers.formatDecimal(totalCarrito != null ? totalCarrito : 0, 1, 2)}">0.00</span> €
                         </span>
                     </div>
-                    <a th:href="@{/carrito/tramitar}"
+                    <a th:href="@{/carrito}"
                        class="btn btn-primary w-100 py-2 rounded-pill fw-bold"
                        th:classappend="${carritoItems == null or carritoItems.isEmpty()} ? 'disabled' : ''">
                         Ver toda la cesta
@@ -122,8 +123,6 @@
                 </div>
             </div>
         </div>
-
-        <script th:src="@{/js/carrito.js}"></script>
 
     </div>
 	

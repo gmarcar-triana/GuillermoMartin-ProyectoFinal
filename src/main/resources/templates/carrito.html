@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Carrito — Productos Gourmet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+    <div th:replace="~{fragments/general :: cabecera}"></div>
+
+    <div class="container mt-5 pt-4 pb-5">
+
+        <h2 class="fw-bold mb-4"><i class="bi bi-cart4 me-2 text-primary"></i>Tu Carrito</h2>
+
+        <div th:if="${carritoItems == null or carritoItems.isEmpty()}"
+             class="text-center text-muted py-5">
+            <i class="bi bi-cart-x display-1 text-secondary mb-3"></i>
+            <p class="fs-4">Tu carrito está vacío</p>
+            <a href="/productos" class="btn btn-primary mt-2">
+                <i class="bi bi-arrow-left me-1"></i> Seguir comprando
+            </a>
+        </div>
+
+        <div th:if="${carritoItems != null and !carritoItems.isEmpty()}">
+            <table class="table table-bordered align-middle bg-white rounded-4 overflow-hidden shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-center">Precio unit.</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-center">Subtotal</th>
+                        <th class="text-center">Quitar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="entry : ${carritoItems}">
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <img th:src="${entry.key.imagenUrl}"
+                                     alt="img"
+                                     class="rounded-3 object-fit-cover"
+                                     style="width:56px; height:56px;">
+                                <span class="fw-semibold" th:text="${entry.key.nombre}">Nombre</span>
+                            </div>
+                        </td>
+                        <td class="text-center"
+                            th:text="${#numbers.formatDecimal(entry.key.precio * (1 - entry.key.descuento), 1, 2) + ' €'}">
+                        </td>
+                        <td class="text-center fw-bold" th:text="${entry.value}">1</td>
+                        <td class="text-center fw-bold text-primary"
+                            th:text="${#numbers.formatDecimal(entry.key.precio * (1 - entry.key.descuento) * entry.value, 1, 2) + ' €'}">
+                        </td>
+                        <td class="text-center">
+                            <a th:href="@{/borrarProducto/{id}(id=${entry.key.codigoProducto})}"
+                               class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot class="table-light">
+                    <tr>
+                        <td colspan="3" class="text-end fw-bold fs-5">Total:</td>
+                        <td class="text-center fw-bold fs-5 text-primary"
+                            th:text="${#numbers.formatDecimal(totalCarrito != null ? totalCarrito : 0, 1, 2) + ' €'}">
+                        </td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="d-flex justify-content-between mt-3">
+                <a href="/productos" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Seguir comprando
+                </a>
+				<a th:href="@{/carrito/vaciar}" class="btn btn-danger fw-bold px-4">
+				   <i class="bi bi-bag-check me-1"></i> Borrar cesta
+				</a>
+                <a th:href="@{/carrito/tramitar}" class="btn btn-primary fw-bold px-4">
+                    <i class="bi bi-bag-check me-1"></i> Tramitar pedido
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:replace="~{fragments/general :: pie}"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

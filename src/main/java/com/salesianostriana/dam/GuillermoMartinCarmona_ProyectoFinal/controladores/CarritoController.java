@@ -36,25 +36,24 @@ public class CarritoController {
 		this.pedidoService = pedidoService;
 	}
 
-	// -----------------------------------------------------------------------
-	// ModelAttributes: se inyectan automáticamente en TODOS los modelos
-	// de este controlador. Así el fragment general.html siempre tiene los datos.
-	// -----------------------------------------------------------------------
-
-	/**
-	 * Pasa el mapa del carrito (Producto → cantidad) a todos los modelos.
-	 * El fragment general.html lo usa con th:each para listar los items.
-	 */
+	
+	@GetMapping("/carrito")
+	public String mostrarCarrito(Model model) {
+		
+		return "carrito";
+		
+	}
+	
 	@ModelAttribute("carritoItems")
 	public Map<Producto, Integer> carritoItems() {
+		
 		return carritoService.getProductsInCart();
+		
 	}
 
-	/**
-	 * Total acumulado del carrito, aplicando descuentos.
-	 */
 	@ModelAttribute("totalCarrito")
 	public Double totalCarrito() {
+		
 		Map<Producto, Integer> carrito = carritoService.getProductsInCart();
 		double total = 0.0;
 		if (carrito != null) {
@@ -64,48 +63,28 @@ public class CarritoController {
 			return total;
 		}
 		return 0.0;
+		
 	}
 
-	/**
-	 * Número total de unidades en el carrito (para el badge del navbar).
-	 */
 	@ModelAttribute("cantidadCarrito")
 	public int cantidadCarrito() {
+		
 		Map<Producto, Integer> carrito = carritoService.getProductsInCart();
 		if (carrito != null) {
 			return carrito.values().stream().mapToInt(Integer::intValue).sum();
 		}
 		return 0;
+		
 	}
 
-	// -----------------------------------------------------------------------
-	// Endpoints
-	// -----------------------------------------------------------------------
-
-	@GetMapping("/carrito")
-	public String mostrarCarrito(Model model) {
-		return "carrito";
-	}
-
-	/**
-	 * Añade el producto al carrito en sesión Y crea/actualiza la LineaPedido en BD.
-	 * Usa RedirectAttributes para pasar un flash attribute que el JS usará
-	 * para abrir automáticamente el offcanvas del carrito al volver a la página.
-	 */
 	@GetMapping("/agregarProducto/{id}")
-	public String productoACarrito(@PathVariable("id") Long id, Model model,
-			RedirectAttributes redirectAttributes) {
+	public String productoACarrito(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
 
 		Producto producto = productoService.findById(id)
 				.orElseThrow(() -> new NoSuchElementException("Producto " + id + " no encontrado"));
 
-		// 1. Añadir al carrito de sesión
 		carritoService.addProducto(producto);
-
-		// 2. Crear/actualizar LineaPedido en BD
 		pedidoService.agregarLinea(producto, 1);
-
-		// 3. Flash attribute para que JS abra el offcanvas automáticamente
 		redirectAttributes.addFlashAttribute("abrirCarrito", true);
 
 		return "redirect:/";
@@ -113,25 +92,15 @@ public class CarritoController {
 
 	@GetMapping("/borrarProducto/{id}")
 	public String removeProductFromCartV1(@PathVariable("id") Long id) {
+		
 		carritoService.removeProductoPorId(id);
-		return "redirect:/carrito";
+		return "redirect:/";
+		
 	}
 
-	@GetMapping("/carrito/tramitar")
-	public String tramitarPedido(Model model) {
-		Map<Producto, Integer> carrito = carritoService.getProductsInCart();
-
-		if (carrito == null || carrito.isEmpty()) {
-			return "redirect:/";
-		}
-
-		model.addAttribute("products", carrito);
-
-		return "ticket";
-	}
-
-	@GetMapping("/carrito/vaciar-y-nueva-compra")
+	@GetMapping("/carrito/vaciar")
 	public String vaciarYNuevaCompra() {
+		
 		Map<Producto, Integer> carrito = carritoService.getProductsInCart();
 
 		if (carrito != null) {

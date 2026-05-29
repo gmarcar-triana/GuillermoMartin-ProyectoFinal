@@ -11,6 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.ServletException;
@@ -34,13 +36,24 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
 		log.info("Authentication: " + authentication.toString());
 
-		String role = getMaxRole(authentication.getAuthorities());
+		// 1. Comprobar si el usuario intentaba acceder a una URL protegida antes del login
+		HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+		SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-		log.info("Max role: " + role);
+		String redirectUrl;
 
-		String redirectUrl = determineTargetUrl(role);
-
-		log.info("Redirect url: " + redirectUrl);
+		if (savedRequest != null) {
+			// Hay una URL guardada: redirigir a donde el usuario quería ir
+			redirectUrl = savedRequest.getRedirectUrl();
+			log.info("Redirigiendo a la URL guardada: " + redirectUrl);
+			requestCache.removeRequest(request, response); // limpiar la sesión
+		} else {
+			// No hay URL guardada: usar la URL por defecto según el rol
+			String role = getMaxRole(authentication.getAuthorities());
+			log.info("Max role: " + role);
+			redirectUrl = determineTargetUrl(role);
+			log.info("Redirigiendo a URL por rol: " + redirectUrl);
+		}
 
 		if (response.isCommitted()) {
 			log.info("Can't redirect");
