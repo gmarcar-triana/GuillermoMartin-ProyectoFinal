@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Producto;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.ProductoService;
@@ -17,8 +19,7 @@ public class MainController {
 
 	@Autowired
 	private ProductoService productoService;
-	
-	
+		
 	@GetMapping("/")
 	public String cargarIndex(Model model) {
 		
@@ -31,14 +32,32 @@ public class MainController {
 	}
 	
 	@GetMapping("/productos")
-	public String listadoProductos(Model model) {
+	public String listadoProductos(@RequestParam(value = "sort", required = false) String sort, Model model) {
 
-		List<Producto> productos;
-		productos=productoService.obtenerTodosProductos();
+		List<Producto> productos = new java.util.ArrayList<>(productoService.obtenerTodosProductos());
+		
+		if ("asc".equalsIgnoreCase(sort)) {
+			productos.sort(java.util.Comparator.comparingDouble(Producto::getPrecioFinal));
+		} else if ("desc".equalsIgnoreCase(sort)) {
+			productos.sort(java.util.Comparator.comparingDouble(Producto::getPrecioFinal).reversed());
+		}
+		
 		model.addAttribute("listaProductos", productos);
+		model.addAttribute("currentSort", sort != null ? sort : "default");
 
 		return "productos";
 
+	}
+	
+	@GetMapping("/productos/{nombre}")
+	public String listarPorCategoria(@PathVariable("nombre") String nombre, Model model) {
+		
+		List<Producto> productos = productoService.obtenerProductosPorCategoria(nombre);
+		
+		model.addAttribute("listaProductos", productos);
+		return "productos";
+		
+		
 	}
 	
 	

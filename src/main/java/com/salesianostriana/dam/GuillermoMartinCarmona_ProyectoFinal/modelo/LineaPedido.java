@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class LineaPedido {
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private int cantidad;
 	
@@ -32,6 +33,10 @@ public class LineaPedido {
 	@JoinColumn(name = "producto_id",
 		foreignKey = @ForeignKey(name = "fk_lineaventa_producto"))
 	private Producto producto;
+
+	public double getSubtotal() {
+		return cantidad * producto.getPrecioFinal();
+	}
 
 	
 	/*

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Pedidos — Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{../css/style.css}">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/general :: cabecera}"></div>
+
+    <div class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold mb-1">Control de Pedidos</h1>
+                <p class="text-muted mb-0">Listado de todos los pedidos registrados en el sistema</p>
+            </div>
+            <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary">Volver al Dashboard</a>
+        </div>
+
+        <div th:if="${#lists.isEmpty(listaPedidos)}" class="text-center text-muted py-5">
+            <i class="bi bi-inbox display-1"></i>
+            <p class="fs-4 mt-3">No hay pedidos registrados todavía</p>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(listaPedidos)}">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-4"># Pedido</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Líneas</th>
+                            <th>Productos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pedido : ${listaPedidos}">
+                            <td class="ps-4">
+                                <a href="#" class="text-decoration-none fw-bold text-primary transition-all"
+                                   data-bs-toggle="modal"
+                                   th:data-bs-target="'#modalPedido-' + ${pedido.codigoPedido}">
+                                    #<span th:text="${pedido.codigoPedido}"></span>
+                                </a>
+                            </td>
+                            <td th:text="${#temporals.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td>
+                                <div class="fw-bold text-success"
+                                    th:text="${#numbers.formatDecimal(pedido.total, 1, 2) + ' €'}"></div>
+                                <div class="small text-muted" style="font-size: 0.75rem;">
+                                    <span th:if="${(pedido.lineasVenta != null and !pedido.lineasVenta.isEmpty() ? #aggregates.sum(pedido.lineasVenta.![subtotal]) : 0.0) > 100.0}" class="text-success"><i class="bi bi-truck me-1"></i>Envío gratis</span>
+                                    <span th:if="${(pedido.lineasVenta != null and !pedido.lineasVenta.isEmpty() ? #aggregates.sum(pedido.lineasVenta.![subtotal]) : 0.0) <= 100.0}" class="text-secondary"><i class="bi bi-truck me-1"></i>Envío +4,99 €</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary rounded-pill"
+                                    th:text="${pedido.lineasVenta.size()}">0</span>
+                            </td>
+                            <td>
+                                <div th:each="linea : ${pedido.lineasVenta}" class="small d-inline-block me-1 mb-1">
+                                    <span class="badge bg-light text-dark border">
+                                        <span th:text="${linea.producto.nombre}"></span>
+                                        ×<span th:text="${linea.cantidad}"></span>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary rounded-pill px-3 transition-all"
+                                        data-bs-toggle="modal"
+                                        th:data-bs-target="'#modalPedido-' + ${pedido.codigoPedido}">
+                                    <i class="bi bi-eye me-1"></i> Detalles
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:each="pedido : ${listaPedidos}">
+                <div class="modal fade" th:id="'modalPedido-' + ${pedido.codigoPedido}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                            <div class="modal-header bg-dark text-white py-3 border-0">
+                                <h5 class="modal-title fw-bold">
+                                    <i class="bi bi-receipt-cutoff me-2 text-success"></i>
+                                    Pedido #<span th:text="${pedido.codigoPedido}"></span>
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4 bg-light text-start">
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm rounded-3 p-3 bg-white h-100">
+                                            <span class="text-muted small fw-bold">Fecha de Creación</span>
+                                            <div class="fs-5 fw-bold text-dark mt-1" th:text="${#temporals.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm rounded-3 p-3 bg-white h-100">
+                                            <span class="text-muted small fw-bold">Importe Total</span>
+                                            <div class="fs-4 fw-bold text-success mt-1" th:text="${#numbers.formatDecimal(pedido.total, 1, 2) + ' €'}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card border-0 shadow-sm rounded-3 p-3 bg-white mb-4">
+                                    <h6 class="fw-bold text-dark mb-3"><i class="bi bi-person me-2 text-primary"></i>Datos del Cliente</h6>
+                                    <div th:if="${pedido.cliente != null}">
+                                        <div class="row g-2">
+                                            <div class="col-sm-6">
+                                                <span class="text-muted small">Nombre completo:</span>
+                                                <div class="fw-semibold text-dark" th:text="${pedido.cliente.nombre + ' ' + pedido.cliente.apellidos}"></div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <span class="text-muted small">Usuario (username):</span>
+                                                <div class="fw-semibold text-dark" th:text="${pedido.cliente.username}"></div>
+                                            </div>
+                                            <div class="col-sm-6 mt-2">
+                                                <span class="text-muted small">Correo Electrónico:</span>
+                                                <div class="fw-semibold text-dark" th:text="${pedido.cliente.email}"></div>
+                                            </div>
+                                            <div class="col-sm-6 mt-2">
+                                                <span class="text-muted small">Teléfono:</span>
+                                                <div class="fw-semibold text-dark" th:text="${pedido.cliente.telefono != null ? pedido.cliente.telefono : 'No facilitado'}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div th:if="${pedido.cliente == null}" class="text-muted py-2">
+                                        <i class="bi bi-info-circle me-1"></i> Pedido realizado por un cliente invitado o cargado por semilla del sistema.
+                                    </div>
+                                </div>
+                                <div class="card border-0 shadow-sm rounded-3 p-3 bg-white mb-4">
+                                    <h6 class="fw-bold text-dark mb-3"><i class="bi bi-box-seam me-2 text-primary"></i>Productos Incluidos</h6>
+                                    <div class="d-flex flex-column gap-3">
+                                        <div th:each="linea : ${pedido.lineasVenta}" class="d-flex align-items-center justify-content-between p-2 rounded hover-bg-light transition-all">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img th:src="${linea.producto.imagenUrl}" alt="Imagen de producto" 
+                                                     class="rounded object-fit-cover shadow-sm border" 
+                                                     style="width: 60px; height: 60px;">
+                                                <div>
+                                                    <div class="fw-bold text-dark" th:text="${linea.producto.nombre}"></div>
+                                                    <div class="small text-muted" th:text="${linea.producto.categoria}"></div>
+                                                    <div class="small text-secondary mt-1">
+                                                        Precio unitario: 
+                                                        <span class="text-decoration-line-through text-muted small" 
+                                                              th:if="${linea.producto.tieneDescuento()}" 
+                                                              th:text="${#numbers.formatDecimal(linea.producto.precio, 1, 2) + ' €'}"></span>
+                                                        <span th:text="${#numbers.formatDecimal(linea.producto.getPrecioFinal(), 1, 2) + ' €'}"></span>
+                                                        <span class="badge bg-danger rounded-pill ms-1" 
+                                                              th:if="${linea.producto.tieneDescuento()}"
+                                                              th:text="'-' + ${linea.producto.descuento} + '%'"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge bg-primary rounded-pill px-2 py-1 mb-1" th:text="'x' + ${linea.cantidad}"></span>
+                                                <div class="fw-bold text-dark" th:text="${#numbers.formatDecimal(linea.cantidad * linea.producto.getPrecioFinal(), 1, 2) + ' €'}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card border-0 shadow-sm rounded-3 p-3 bg-white">
+                                    <h6 class="fw-bold text-dark mb-3"><i class="bi bi-cash-stack me-2 text-primary"></i>Resumen Económico</h6>
+                                    <div class="d-flex justify-content-between mb-2 small text-muted">
+                                        <span>Subtotal Productos:</span>
+                                        <span class="fw-semibold text-dark" th:text="${#numbers.formatDecimal(pedido.lineasVenta != null and !pedido.lineasVenta.isEmpty() ? #aggregates.sum(pedido.lineasVenta.![subtotal]) : 0.0, 1, 2) + ' €'}">0.00 €</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2 small text-muted">
+                                        <span>Gastos de Envío:</span>
+                                        <span>
+                                            <span th:if="${(pedido.lineasVenta != null and !pedido.lineasVenta.isEmpty() ? #aggregates.sum(pedido.lineasVenta.![subtotal]) : 0.0) > 100.0}" class="badge bg-success rounded-pill">Gratis</span>
+                                            <span th:if="${(pedido.lineasVenta != null and !pedido.lineasVenta.isEmpty() ? #aggregates.sum(pedido.lineasVenta.![subtotal]) : 0.0) <= 100.0}" class="fw-semibold text-dark">4,99 €</span>
+                                        </span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-0 fw-bold fs-5 border-top pt-2">
+                                        <span>Total Facturado:</span>
+                                        <span class="text-success" th:text="${#numbers.formatDecimal(pedido.total, 1, 2) + ' €'}">0.00 €</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-white border-0 py-3">
+                                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-3">
+                <div class="card border-0 shadow-sm rounded-3 px-4 py-3 bg-white">
+                    <span class="text-muted small">Total facturado</span>
+                    <div class="fw-bold fs-4 text-success">
+                        <span
+                            th:text="${#numbers.formatDecimal(#aggregates.sum(listaPedidos.![total]), 1, 2) + ' €'}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:replace="~{fragments/general :: pie}"></div>
+
+</body>
+
+</html>

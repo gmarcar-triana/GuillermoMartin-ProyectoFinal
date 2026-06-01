@@ -11,10 +11,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Pedido;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Producto;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.CarritoService;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.PedidoService;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.ProductoService;
+import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.VentasService;
+import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.exception.StockInsuficienteException;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class CarritoController {
@@ -27,6 +32,9 @@ public class CarritoController {
 
 	@Autowired
 	private PedidoService pedidoService;
+
+	@Autowired
+	private VentasService ventasService;
 
 	public CarritoController(CarritoService carritoService, ProductoService productoService,
 			PedidoService pedidoService) {
@@ -51,19 +59,34 @@ public class CarritoController {
 		
 	}
 
-	@ModelAttribute("totalCarrito")
-	public Double totalCarrito() {
-		
+	@ModelAttribute("subtotalCarrito")
+	public Double subtotalCarrito() {
 		Map<Producto, Integer> carrito = carritoService.getProductsInCart();
 		double total = 0.0;
 		if (carrito != null) {
 			for (Producto p : carrito.keySet()) {
 				total += p.getPrecio() * (1 - p.getDescuento()) * carrito.get(p);
 			}
-			return total;
+		}
+		return total;
+	}
+
+	@ModelAttribute("gastosEnvio")
+	public Double gastosEnvio() {
+		Double subtotal = subtotalCarrito();
+		if (subtotal > 0.0 && subtotal <= 100.0) {
+			return ventasService.getPrecioEnvio();
 		}
 		return 0.0;
-		
+	}
+
+	@ModelAttribute("totalCarrito")
+	public Double totalCarrito() {
+		Double subtotal = subtotalCarrito();
+		if (subtotal > 0.0) {
+			return subtotal + gastosEnvio();
+		}
+		return 0.0;
 	}
 
 	@ModelAttribute("cantidadCarrito")
@@ -78,24 +101,49 @@ public class CarritoController {
 	}
 
 	@GetMapping("/agregarProducto/{id}")
-	public String productoACarrito(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
-
-		Producto producto = productoService.findById(id)
-				.orElseThrow(() -> new NoSuchElementException("Producto " + id + " no encontrado"));
-
-		carritoService.addProducto(producto);
-		pedidoService.agregarLinea(producto, 1);
-		redirectAttributes.addFlashAttribute("abrirCarrito", true);
-
-		return "redirect:/";
+	public String productoACarrito(@PathVariable("id") Long id, 
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+		
+		String referer = request.getHeader("Referer");
+		try {
+			Producto producto = productoService.findById(id)
+					.orElseThrow(() -> new NoSuchElementException("Producto " + id + " no encontrado"));
+			if (!producto.isStock()) {
+				throw new StockInsuficienteException("El producto " + producto.getNombre() + " no tiene stock disponible");
+			}
+			carritoService.addProducto(producto);
+			pedidoService.agregarLinea(producto, 1);
+			redirectAttributes.addFlashAttribute("abrirCarrito", true);
+		} catch (StockInsuficienteException e) {
+			redirectAttributes.addFlashAttribute("errorStock", e.getMessage());
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	
+		return "redirect:" + (referer != null ? referer : "/");
+		
 	}
 
 	@GetMapping("/borrarProducto/{id}")
-	public String removeProductFromCartV1(@PathVariable("id") Long id) {
-		
+	public String removeProductFromCartV1(@PathVariable("id") Long id, HttpServletRequest request) {
 		carritoService.removeProductoPorId(id);
-		return "redirect:/";
-		
+		Producto producto = productoService.findById(id).orElse(null);
+		if (producto != null) {
+			pedidoService.restarLinea(producto, Integer.MAX_VALUE);
+		}
+		String referer = request.getHeader("Referer");
+		return "redirect:" + (referer != null ? referer : "/");
+	}
+
+	@GetMapping("/quitarProducto/{id}")
+	public String quitarProducto(@PathVariable("id") Long id, HttpServletRequest request) {
+		Producto producto = productoService.findById(id)
+				.orElseThrow(() -> new NoSuchElementException("Producto " + id + " no encontrado"));
+		carritoService.removeProducto(producto);
+		pedidoService.restarLinea(producto, 1);
+		String referer = request.getHeader("Referer");
+		return "redirect:" + (referer != null ? referer : "/");
 	}
 
 	@GetMapping("/carrito/vaciar")
@@ -110,5 +158,23 @@ public class CarritoController {
 
 		return "redirect:/";
 	}
+	
+	@GetMapping("/carrito/tramitar")
+	public String tramitarCarritoDeCompra(RedirectAttributes redirectAttributes) {
+		
+		Pedido pedido = pedidoService.getPedidoActual();
+
+		if (pedido != null && !pedido.getLineasVenta().isEmpty()) {
+			pedidoService.guardarPedido();
+			carritoService.limpiarCarrito();
+			redirectAttributes.addFlashAttribute("mensajeExito", "¡Pedido realizado con éxito!");
+		} else {
+			redirectAttributes.addFlashAttribute("errorStock", "No hay productos en el carrito para tramitar.");
+		}
+
+		return "redirect:/";
+	}
+	
+	
 
 }
