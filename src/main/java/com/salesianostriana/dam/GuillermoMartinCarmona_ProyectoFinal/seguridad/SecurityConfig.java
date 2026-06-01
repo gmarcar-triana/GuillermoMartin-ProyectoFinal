@@ -4,12 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+
 /*
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Cliente;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Usuario;
@@ -19,7 +16,7 @@ import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Usua
 public class SecurityConfig {
 
 	private CustomSuccessHandler customSuccessHandler;
-		
+
 	public SecurityConfig(CustomSuccessHandler customSuccessHandler) {
 		super();
 		this.customSuccessHandler = customSuccessHandler;
@@ -29,29 +26,25 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) {
 
 		http.authorizeHttpRequests((authz) -> authz
-					.requestMatchers("/admin/**").hasRole("ADMIN")
-					.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")
-					.requestMatchers("/", "/productos", "/ofertas", "/detalles/{id}", "/login", "/logout",
-							"/agregarProducto/**", "/borrarProducto/**","/carrito", "/carrito/vaciar").permitAll()					
-					.anyRequest()
-					.authenticated())
+				.requestMatchers("/admin/**").hasRole("ADMIN")
+				.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")
+				.requestMatchers("/agregarProducto/**", "/quitarProducto/**", "/borrarProducto/**", "/carrito", "/carrito/**").authenticated()
+				.requestMatchers("/", "/productos", "/ofertas", "/detalles/{id}", "/login", "/logout", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+				.anyRequest().authenticated())
 				.requestCache(cache -> {
-		              HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
-		              requestCache.setMatchingRequestParameterName(null);
-		              cache.requestCache(requestCache);
-		          })
+					HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+					requestCache.setMatchingRequestParameterName(null);
+					cache.requestCache(requestCache);
+				})
 				.formLogin(form -> form
-				        .loginPage("/login")
-				        .successHandler(customSuccessHandler)
-				        .permitAll()
-				)
+						.loginPage("/login")
+						.successHandler(customSuccessHandler)
+						.permitAll())
 				.logout(logout -> logout
 						.logoutUrl("/logout")
 						.logoutSuccessUrl("/")
-						.permitAll()
-				);
-				
-		
+						.permitAll());
+
 		http.csrf((csrf) -> {
 			csrf.ignoringRequestMatchers("/h2/**");
 		});
@@ -59,28 +52,36 @@ public class SecurityConfig {
 
 		return http.build();
 	}
-
-	@Bean
-	UserDetailsService userDetailsService() {
-		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-
-		UserDetails user = User.builder().username("user").password("{noop}user").roles("USER").build();
-
-		UserDetails admin = User.builder().username("admin").password("{noop}admin").roles("ADMIN").build();
-
-		UserDetails user2 = User.builder().username("user1").password("{noop}user1").roles("USER").build();
-		
-		/*
-		Usuario admin = new Cliente();
-			admin.setUsername("admin");
-			admin.setPassword("{noop}admin");
-		*/
-		
-		manager.createUser(user);
-		manager.createUser(admin);
-		manager.createUser(user2);
-
-		return manager;
-	}
+	
+/*	
+	  @Bean
+	  UserDetailsService userDetailsService() {
+	  InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+	  
+	  UserDetails user =
+	  User.builder().username("user").password("{noop}user").roles("USER").build();
+	  
+	  UserDetails admin =
+	  User.builder().username("admin").password("{noop}admin").roles("ADMIN").build
+	  ();
+	  
+	  UserDetails user2 =
+	  User.builder().username("user1").password("{noop}user1").roles("USER").build(
+	  );
+	  
+	  
+	  Usuario admin = new Cliente();
+	  admin.setUsername("admin");
+	  admin.setPassword("{noop}admin");
+	  
+	  
+	  manager.createUser(user);
+	  manager.createUser(admin);
+	  manager.createUser(user2);
+	  
+	  return manager;
+	  }
+*/ 
+	 
 
 }

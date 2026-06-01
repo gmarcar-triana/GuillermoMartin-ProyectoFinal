@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Ventas — Panel Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/general :: cabecera}"></div>
+
+    <div class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold mb-1">Análisis de Ventas</h1>
+                <p class="text-muted mb-0">Rendimiento comercial y métricas de la tienda online</p>
+            </div>
+            <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary">Volver al Panel</a>
+        </div>
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+            <form th:action="@{/admin/analisisVentas}" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="filtroFecha" class="form-label fw-bold text-dark"><i class="bi bi-calendar-event me-2"></i>Filtrar por fecha de pedido</label>
+                    <input type="date" id="filtroFecha" name="fecha" th:value="${fechaSeleccionada}" class="form-control rounded-pill px-3">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 me-2 shadow-sm">
+                        <i class="bi bi-funnel-fill me-1"></i> Filtrar
+                    </button>
+                    <a th:href="@{/admin/analisisVentas}" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+                        <i class="bi bi-x-circle-fill me-1"></i> Limpiar
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="p-2 bg-success bg-opacity-10 text-success rounded-circle me-3">
+                            <i class="bi bi-cash-coin fs-4"></i>
+                        </div>
+                        <span class="text-muted small fw-bold">Facturación Total</span>
+                    </div>
+                    <div class="fs-2 fw-bold text-success" th:text="${#numbers.formatDecimal(facturacionTotal, 1, 2) + ' €'}">0.00 €</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="p-2 bg-primary bg-opacity-10 text-primary rounded-circle me-3">
+                            <i class="bi bi-receipt fs-4"></i>
+                        </div>
+                        <span class="text-muted small fw-bold">Pedidos Totales</span>
+                    </div>
+                    <div class="fs-2 fw-bold text-dark" th:text="${totalPedidos}">0</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="p-2 bg-info bg-opacity-10 text-info rounded-circle me-3">
+                            <i class="bi bi-tag fs-4"></i>
+                        </div>
+                        <span class="text-muted small fw-bold">Ticket Medio</span>
+                    </div>
+                    <div class="fs-2 fw-bold text-info" th:text="${#numbers.formatDecimal(ticketMedio, 1, 2) + ' €'}">0.00 €</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 position-relative">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="d-flex align-items-center">
+                            <div class="p-2 bg-warning bg-opacity-10 text-warning rounded-circle me-3">
+                                <i class="bi bi-truck fs-4"></i>
+                            </div>
+                            <span class="text-muted small fw-bold">Ingresos por Envío</span>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-warning border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#modalEditarEnvio" title="Editar precio base de envío">
+                            <i class="bi bi-pencil-square fs-6"></i>
+                        </button>
+                    </div>
+                    <div class="fs-2 fw-bold text-warning" th:text="${#numbers.formatDecimal(gastosEnvio, 1, 2) + ' €'}">0.00 €</div>
+                    <div class="text-muted mt-1" style="font-size: 0.75rem;">
+                        Precio base actual: <strong th:text="${#numbers.formatDecimal(precioEnvio, 1, 2) + ' €'}">4.99 €</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-fire text-warning fs-4 me-2"></i>
+                        <h5 class="fw-bold mb-0">Productos Más Vendidos</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Categoría</th>
+                                    <th class="text-center">Unidades</th>
+                                    <th class="text-end">Recaudado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="prod : ${productosMasVendidos}">
+                                    <td class="fw-semibold text-dark" th:text="${prod.nombre}"></td>
+                                    <td th:text="${prod.categoria}"></td>
+                                    <td class="text-center fw-bold text-primary" th:text="${prod.unidadesVendidas}"></td>
+                                    <td class="text-end fw-bold text-success" th:text="${#numbers.formatDecimal(prod.totalRecaudado, 1, 2) + ' €'}"></td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(productosMasVendidos)}">
+                                    <td colspan="4" class="text-center text-muted py-3">No hay datos de ventas registrados</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-pie-chart-fill text-primary fs-4 me-2"></i>
+                        <h5 class="fw-bold mb-0">Ventas por Categoría</h5>
+                    </div>
+                    <div class="d-flex flex-column gap-3 mt-2">
+                        <div th:each="cat : ${ventasPorCategoria}">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="fw-semibold text-dark" th:text="${cat.nombre}"></span>
+                                <span class="text-muted small">
+                                    <span th:text="${#numbers.formatDecimal(cat.totalFacturado, 1, 2) + ' €'}"></span>
+                                    (<span th:text="${#numbers.formatDecimal(cat.porcentaje, 1, 1) + '%'}"></span>)
+                                </span>
+                            </div>
+                            <div class="progress rounded-pill" style="height: 10px;">
+                                <div class="progress-bar bg-success rounded-pill" role="progressbar" 
+                                     th:style="'width: ' + ${cat.porcentaje} + '%'" 
+                                     th:aria-valuenow="${cat.porcentaje}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        <div th:if="${#lists.isEmpty(ventasPorCategoria)}" class="text-center text-muted py-5">
+                            No hay datos de categorías registrados
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-person-lines-fill text-info fs-4 me-2"></i>
+                        <h5 class="fw-bold mb-0">Clientes con Mayor Gasto</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th class="text-center">Pedidos</th>
+                                    <th class="text-end">Total Gastado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="cliente : ${clientesMayorGasto}">
+                                    <td class="fw-semibold text-dark" th:text="${cliente.nombre}"></td>
+                                    <td th:text="${cliente.email}"></td>
+                                    <td class="text-center" th:text="${cliente.totalPedidos}"></td>
+                                    <td class="text-end fw-bold text-success" th:text="${#numbers.formatDecimal(cliente.totalGasto, 1, 2) + ' €'}"></td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(clientesMayorGasto)}">
+                                    <td colspan="4" class="text-center text-muted py-3">No hay clientes con compras registradas</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-clock-history text-secondary fs-4 me-2"></i>
+                        <h5 class="fw-bold mb-0">Últimas Ventas Realizadas</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Fecha</th>
+                                    <th>Líneas</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="pedido : ${ultimosPedidos}">
+                                    <td class="fw-bold text-primary">#<span th:text="${pedido.codigoPedido}"></span></td>
+                                    <td th:text="${#temporals.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+                                    <td class="text-center">
+                                        <span class="badge bg-secondary rounded-pill" th:text="${pedido.lineasVenta.size()}">0</span>
+                                    </td>
+                                    <td class="text-end fw-bold text-success" th:text="${#numbers.formatDecimal(pedido.total, 1, 2) + ' €'}"></td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(ultimosPedidos)}">
+                                    <td colspan="4" class="text-center text-muted py-3">No hay ventas recientes</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-3">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-exclamation-triangle-fill text-danger fs-4 me-2"></i>
+                            <h5 class="fw-bold mb-0">Productos Sin Stock</h5>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nombre del Producto</th>
+                                    <th>Categoría</th>
+                                    <th>Precio Base</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="prodSinStock : ${productosSinStock}">
+                                    <td class="text-mono small" th:text="${prodSinStock.codigoProducto}"></td>
+                                    <td class="fw-semibold text-danger" th:text="${prodSinStock.nombre}"></td>
+                                    <td th:text="${prodSinStock.categoria}"></td>
+                                    <td th:text="${#numbers.formatDecimal(prodSinStock.precio, 1, 2) + ' €'}"></td>
+                                    <td>
+                                        <a th:href="@{/admin/editar/{id}(id=${prodSinStock.codigoProducto})}" class="btn btn-sm btn-outline-dark rounded-pill py-1 px-3 fs-7">
+                                            Editar Producto
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(productosSinStock)}">
+                                    <td colspan="5" class="text-center text-muted py-3">¡Excelente! Todos los productos tienen stock disponible.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:replace="~{fragments/general :: pie}"></div>
+
+    <div class="modal fade" id="modalEditarEnvio" tabindex="-1" aria-labelledby="modalEditarEnvioLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-warning text-dark py-3 border-0">
+                    <h5 class="modal-title fw-bold" id="modalEditarEnvioLabel">
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Editar Gastos de Envío
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/admin/analisisVentas/envio}" method="post">
+                    <div class="modal-body p-4 bg-light text-start">
+                        <p class="text-muted mb-3">Especifica el nuevo precio base que se cobrará para pedidos inferiores a 100 €.</p>
+                        <div class="mb-3">
+                            <label for="precio" class="form-label fw-semibold text-dark">Precio base (€)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="bi bi-currency-euro"></i></span>
+                                <input type="number" step="0.01" min="0" id="precio" name="precio" th:value="${precioEnvio}" class="form-control" placeholder="0.00" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-white border-0 py-3">
+                        <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning text-dark fw-bold rounded-pill px-4">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

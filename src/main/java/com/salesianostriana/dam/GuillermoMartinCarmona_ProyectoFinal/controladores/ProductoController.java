@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
 
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Producto;
+import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.modelo.Pedido;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.repositorios.PedidoRepositorio;
 import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.services.ProductoService;
 
@@ -30,16 +33,17 @@ public class ProductoController {
 	@GetMapping("/dashboard")
 	public String enrutadorDashboard() {
 		
-		return "/admin/dashboard";
+		return "admin/dashboard";
 		
 	}
 
 	@GetMapping("/controlPedidos")
 	public String controlPedidos(Model model) {
-		
-		model.addAttribute("listaPedidos", pedidoRepositorio.findAll());
-		return "/admin/controlPedidos";
-		
+		List<Pedido> pedidos = pedidoRepositorio.findAll();
+		double totalVentas = pedidos.stream().mapToDouble(Pedido::getTotal).sum();
+		model.addAttribute("listaPedidos", pedidos);
+		model.addAttribute("totalVentas", totalVentas);
+		return "admin/controlPedidos";
 	}
 
 	@GetMapping("/productosCrud")
@@ -50,7 +54,7 @@ public class ProductoController {
 		productos=productoService.obtenerTodosProductos();
 		model.addAttribute("listaProductos", productos);
 
-		return "/admin/productoscrud";
+		return "admin/productosCrud";
 
 	}
 
@@ -74,12 +78,16 @@ public class ProductoController {
 
 		model.addAttribute("producto", new Producto());
 
-		return "/admin/productform";
+		return "admin/productform";
 
 	}
 
 	@PostMapping("/nuevo/submit")
-	public String procesaFormularioProducto(@ModelAttribute("producto") Producto producto) {
+	public String procesaFormularioProducto(@Valid @ModelAttribute("producto") Producto producto, BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			return "admin/productform";
+		}
 
 		productoService.save(producto);
 
@@ -94,9 +102,9 @@ public class ProductoController {
 	
 		if (productoEditar.isPresent()) {
 			model.addAttribute("producto", productoEditar.get());
-			return "/admin/productForm";
+			return "admin/productform";
 		} else {
-			return "redirect:/admin/productoscrud";
+			return "redirect:/admin/productosCrud";
 		}
 
 	}
@@ -104,10 +112,7 @@ public class ProductoController {
 	@GetMapping("/borrar/{id}")
 	public String borrarProducto(@PathVariable("id") Long id) {
 
-		Optional<Producto> aBorrar = productoService.findById(id);
-		if (aBorrar.isPresent()) {
-			productoService.delete(aBorrar.get());
-		}
+		productoService.desactivar(id);
 		
 		return "redirect:/admin/productosCrud";
 

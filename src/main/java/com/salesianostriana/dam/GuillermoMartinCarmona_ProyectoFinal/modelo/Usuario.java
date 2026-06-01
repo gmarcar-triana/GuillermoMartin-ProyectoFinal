@@ -12,6 +12,8 @@ import jakarta.persistence.InheritanceType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import com.salesianostriana.dam.GuillermoMartinCarmona_ProyectoFinal.exception.EmailInvalidoException;
+
 @SuppressWarnings("serial")
 @Data
 @Entity
@@ -66,5 +68,10 @@ public abstract class Usuario implements UserDetails {
 		return true;
 	}	
 	
-	
+	public void setEmail(String email) {
+		if (email != null && !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+			throw new EmailInvalidoException("El formato del correo electronico no es valido");
+		}
+		this.email = email;
+	}
 }

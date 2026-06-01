@@ -8,9 +8,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import lombok.NoArgsConstructor;
 
 @SuppressWarnings("serial")
 @Entity
+@NoArgsConstructor
 @DiscriminatorValue("A")
 public class Admin extends Usuario {
 

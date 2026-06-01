@@ -49,7 +49,13 @@
                         <td class="text-center"
                             th:text="${#numbers.formatDecimal(entry.key.precio * (1 - entry.key.descuento), 1, 2) + ' €'}">
                         </td>
-                        <td class="text-center fw-bold" th:text="${entry.value}">1</td>
+                        <td class="text-center">
+                            <div class="d-flex align-items-center justify-content-between border rounded px-2 mx-auto" style="width: 85px; height: 28px; background-color: #fff;">
+                                <a th:href="@{/quitarProducto/{id}(id=${entry.key.codigoProducto})}" class="text-decoration-none fw-bold d-flex align-items-center justify-content-center" style="font-size: 0.9rem; width: 16px; height: 16px; color: #0d6efd;">−</a>
+                                <span class="fw-semibold text-dark" th:text="${entry.value}" style="font-size: 0.85rem;">1</span>
+                                <a th:href="@{/agregarProducto/{id}(id=${entry.key.codigoProducto})}" class="text-decoration-none fw-bold d-flex align-items-center justify-content-center" style="font-size: 0.9rem; width: 16px; height: 16px; color: #0d6efd;">+</a>
+                            </div>
+                        </td>
                         <td class="text-center fw-bold text-primary"
                             th:text="${#numbers.formatDecimal(entry.key.precio * (1 - entry.key.descuento) * entry.value, 1, 2) + ' €'}">
                         </td>
@@ -63,6 +69,21 @@
                 </tbody>
                 <tfoot class="table-light">
                     <tr>
+                        <td colspan="3" class="text-end fw-semibold">Subtotal:</td>
+                        <td class="text-center fw-semibold text-secondary"
+                            th:text="${#numbers.formatDecimal(subtotalCarrito != null ? subtotalCarrito : 0, 1, 2) + ' €'}">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-end fw-semibold">Gastos de Envío:</td>
+                        <td class="text-center fw-semibold text-secondary">
+                            <span th:if="${gastosEnvio == 0.0}" class="badge bg-success rounded-pill">Gratis</span>
+                            <span th:if="${gastosEnvio > 0.0}" th:text="${#numbers.formatDecimal(gastosEnvio, 1, 2) + ' €'}"></span>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr class="table-secondary">
                         <td colspan="3" class="text-end fw-bold fs-5">Total:</td>
                         <td class="text-center fw-bold fs-5 text-primary"
                             th:text="${#numbers.formatDecimal(totalCarrito != null ? totalCarrito : 0, 1, 2) + ' €'}">

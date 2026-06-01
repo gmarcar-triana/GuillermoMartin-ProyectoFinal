@@ -13,9 +13,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @SuppressWarnings("serial")
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @DiscriminatorValue("C")

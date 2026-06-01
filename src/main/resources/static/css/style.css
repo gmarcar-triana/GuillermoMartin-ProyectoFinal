@@ -17,3 +17,17 @@ body {
     object-fit: cover;
     border-radius: 1.5rem;
 }
+
+.hover-bg-light:hover {
+    background-color: #f8f9fa;
+}
+
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}
+
+.carousel-item img {
+    aspect-ratio: 3 / 1;
+    object-fit: cover;
+    width: 100%;
+}

@@ -21,62 +21,82 @@
 	<div th:replace="~{fragments/general :: cabecera}"></div>
 
 	
-    <div class="container form-container">
-        <h2 class="text-center mb-4">Añadir Nuevo Producto</h2>
-		<form method="POST" action="#" th:action="@{/admin/nuevo/submit}" th:object="${producto}">
-		    <input type="hidden" th:field="${producto.codigoProducto}" />
-		    <div class="mb-3">
-		        <label class="form-label fw-bold">Nombre</label>
-		        <input type="text" class="form-control" name="nombre" th:field="${producto.nombre}" placeholder="Nombre..." />
-		    </div>
-			<div class="mb-3">
-                <label class="form-label fw-bold">Precio</label>
-                <input type="text" class="form-control" name="precio" th:field="${producto.precio}"
-                    placeholder="Precio..." />
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold">Descripción</label>
-                <input type="text" class="form-control" name="descripcion" th:field="${producto.descripcion}"
-                    placeholder="Descripcion..." />
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold d-block">Stock</label>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="stock" id="stockTrue"
-                        th:field="${producto.stock}" value="true" />
-                    <label class="form-check-label" for="stockTrue">Sí</label>
+    <div class="container form-container" style="max-width: 850px;">
+        <div class="card shadow border-0 rounded-4 p-4 p-sm-5 bg-white">
+            <h2 class="text-center mb-4 fw-bold text-dark">
+                <i class="bi text-primary" th:classappend="${producto.codigoProducto != null} ? 'bi-pencil-square' : 'bi-box-seam'"></i>
+                <span th:text="${producto.codigoProducto != null} ? ' Editar Producto' : ' Añadir Nuevo Producto'">Añadir Nuevo Producto</span>
+            </h2>
+            <form method="POST" action="#" th:action="@{/admin/nuevo/submit}" th:object="${producto}">
+                <input type="hidden" th:field="*{codigoProducto}" />
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-7">
+                        <label class="form-label fw-bold">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" th:field="${producto.nombre}" placeholder="Nombre del producto..." />
+                        <div th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="text-danger small mt-1"></div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label fw-bold">Categoría</label>
+                        <input type="text" class="form-control" name="categoria" th:field="${producto.categoria}" placeholder="Categoría..." />
+                        <div th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}" class="text-danger small mt-1"></div>
+                    </div>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="stock" id="stockFalse"
-                        th:field="${producto.stock}" value="false" />
-                    <label class="form-check-label" for="stockFalse">No</label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold">Categoría</label>
-                <input type="text" class="form-control" name="categoria" th:field="${producto.categoria}"
-                    placeholder="Categoria..." />
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold">Fecha de caducidad</label>
-                <input type="date" class="form-control" name="fechaCaducidad" th:field="${producto.fechaCaducidad}"
-                    placeholder="Fecha de caducidad..." />
-            </div>
-			<div class="mb-3">
-			    <label class="form-label fw-bold">Descuento</label>
-			    <input type="text" class="form-control" name="descuento" th:field="${producto.descuento}"
-			        placeholder="Descuento..." />
-			</div>
-			<div class="mb-3">
-			    <label class="form-label fw-bold">Imagen Url</label>
-			    <input type="text" class="form-control" name="Imagen Url" th:field="${producto.imagenUrl}"
-			        placeholder="Imagen Url..." />
-			</div>
 
-            <div class="d-grid mt-4">
-                <input type="submit" class="btn btn-primary" name="enviar" value="Enviar" />
-            </div>
-        </form>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3 col-sm-6">
+                        <label class="form-label fw-bold">Precio (€)</label>
+                        <input type="text" class="form-control" name="precio" th:field="${producto.precio}" placeholder="Precio..." />
+                        <div th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}" class="text-danger small mt-1"></div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <label class="form-label fw-bold">Descuento (%)</label>
+                        <input type="text" class="form-control" name="descuento" th:field="${producto.descuento}" placeholder="Descuento..." />
+                        <div th:if="${#fields.hasErrors('descuento')}" th:errors="*{descuento}" class="text-danger small mt-1"></div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <label class="form-label fw-bold">Stock</label>
+                        <div class="form-control d-flex align-items-center justify-content-around bg-light-subtle" style="height: 38px;">
+                            <div class="form-check form-check-inline mb-0">
+                                <input class="form-check-input" type="radio" id="stockTrue" th:field="*{stock}" value="true" />
+                                <label class="form-check-label mb-0" for="stockTrue">Sí</label>
+                            </div>
+                            <div class="form-check form-check-inline mb-0">
+                                <input class="form-check-input" type="radio" id="stockFalse" th:field="*{stock}" value="false" />
+                                <label class="form-check-label" for="stockFalse">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <label class="form-label fw-bold">Fecha de Caducidad</label>
+                        <input type="date" class="form-control" name="fechaCaducidad" th:field="${producto.fechaCaducidad}" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Imagen URL</label>
+                    <input type="text" class="form-control" name="Imagen Url" th:field="${producto.imagenUrl}" placeholder="URL de la imagen..." />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Descripción</label>
+                    <textarea class="form-control" name="descripcion" th:field="${producto.descripcion}" rows="3" placeholder="Descripción del producto..."></textarea>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-sm-6 order-sm-2">
+                        <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm">
+                            <i class="bi bi-check-circle me-1"></i> Guardar Producto
+                        </button>
+                    </div>
+                    <div class="col-sm-6 order-sm-1">
+                        <a th:href="@{/admin/productosCrud}" class="btn btn-outline-secondary w-100 fw-semibold">
+                            <i class="bi bi-arrow-left me-1"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 	
 	<div th:replace="~{fragments/general :: pie}"></div>
