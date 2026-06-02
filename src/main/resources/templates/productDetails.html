@@ -64,10 +64,11 @@
                         <div class="mb-4">
                             <div th:if="${producto.descuento > 0}">
                                 <span class="display-5 fw-bold text-danger me-2" 
-                                      th:text="${#numbers.formatDecimal(producto.precio * (1 - producto.descuento / 100), 1, 2, 'COMMA')} + ' €'">0.00 €</span>
+                                      th:text="${#numbers.formatDecimal(producto.getPrecioFinal(), 1, 2, 'COMMA')} + ' €'">0.00 €</span>
                                 <span class="text-muted text-decoration-line-through fs-5" 
                                       th:text="${#numbers.formatDecimal(producto.precio, 1, 2, 'COMMA')} + ' €'">0.00 €</span>
-                                <span class="badge bg-danger ms-2" th:text="'-' + ${producto.descuento} + '%'">-10%</span>
+                                <span class="badge bg-danger ms-2" 
+                                      th:text="'-' + ${#numbers.formatDecimal(producto.descuento * 100, 0, 0)} + '%'">-10%</span>
                             </div>
                             <div th:unless="${producto.descuento > 0}">
                                 <span class="display-5 fw-bold text-dark" 

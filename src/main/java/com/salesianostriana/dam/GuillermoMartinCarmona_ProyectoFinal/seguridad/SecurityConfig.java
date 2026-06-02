@@ -29,7 +29,7 @@ public class SecurityConfig {
 				.requestMatchers("/admin/**").hasRole("ADMIN")
 				.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")
 				.requestMatchers("/agregarProducto/**", "/quitarProducto/**", "/borrarProducto/**", "/carrito", "/carrito/**").authenticated()
-				.requestMatchers("/", "/productos", "/ofertas", "/detalles/{id}", "/login", "/logout", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+				.requestMatchers("/", "/productos", "/ofertas", "/detalles/{id}", "/login", "/logout", "/css/**", "/js/**", "/img/**", "/images/**", "/favicon.ico").permitAll()
 				.anyRequest().authenticated())
 				.requestCache(cache -> {
 					HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
