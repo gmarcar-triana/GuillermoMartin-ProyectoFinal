@@ -123,11 +123,11 @@ INSERT INTO usuario (dtype, codigo_usuario, username, password, roles, nombre, a
 INSERT INTO usuario (dtype, codigo_usuario, username, password, roles, nombre, apellidos, email, telefono) VALUES ('C', 1002, 'user', '{noop}user', 'CLIENTE', 'Usuario', 'Normal', 'user@tienda.com', '600000001');
 
 -- Pedidos de ejemplo (sin cliente asociado)
-INSERT INTO pedido (fecha, total) VALUES ('2026-05-01 10:30:00', 103.90);
-INSERT INTO pedido (fecha, total) VALUES ('2026-05-05 14:15:00', 245.50);
-INSERT INTO pedido (fecha, total) VALUES ('2026-05-10 09:00:00', 58.30);
-INSERT INTO pedido (fecha, total) VALUES ('2026-05-15 17:45:00', 380.00);
-INSERT INTO pedido (fecha, total) VALUES ('2026-05-22 11:20:00', 92.80);
+INSERT INTO pedido (fecha, total) VALUES ('2026-05-01 10:30:00', 127.42);
+INSERT INTO pedido (fecha, total) VALUES ('2026-05-05 14:15:00', 124.50);
+INSERT INTO pedido (fecha, total) VALUES ('2026-05-10 09:00:00', 46.39);
+INSERT INTO pedido (fecha, total) VALUES ('2026-05-15 17:45:00', 127.42);
+INSERT INTO pedido (fecha, total) VALUES ('2026-05-22 11:20:00', 137.00);
 
 -- Lineas del Pedido 1
 INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (2, 1, 1);
@@ -152,7 +152,7 @@ INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (3, 4, 3)
 -- Lineas del Pedido 5
 INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (1, 5, 4);
 INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (2, 5, 5);
-INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (1, 5, 6);
+INSERT INTO linea_pedido (cantidad, codigo_pedido, producto_id) VALUES (2, 5, 6);
 
 ALTER TABLE pedido ALTER COLUMN codigo_pedido RESTART WITH 6;
 ALTER TABLE producto ALTER COLUMN codigo_producto RESTART WITH 120;
